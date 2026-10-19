@@ -1,5 +1,421 @@
+
 ---
-title: "Mini-Project Placeholder"
+title: "Mini-Project 01 - What We Watched: Exploring Netflix Viewing Data"
+author: "PhilipLopezJr"
+editor:
+    mode: source
+format:
+    html:
+        code-fold: true
 ---
 
-This is a placeholder for STA9750 Mini-Project 1. Check back soon for more!
+## Introduction
+
+I am a graduate student at Baruch CUNY with the MS Statistics-Data Science program. In this mini-project, I intend to demonstrate my skills at data ingest, cleaning, combination, and alignment, as well as descriptive statistical analysis. The data analyzed is from Netflix's 2023-2026 What We Watched Reports (WWWRs)
+
+## Data Acquisition and Preparation
+
+```{r}
+#| output: false
+#' Acquire Netflix What We Watched Reports
+#' 
+#' This function will acquire and standardize all data for MP#01
+#' from Netflix. Because Netflix hosts the data files behind a CDN, we
+#' are accessing the release pages and automatically extracting links to the
+#' relevant files (with CDN hash). 
+#' 
+#' After import, files are stacked vertically and some basic cleaning is
+#' performed. 
+load_netflix_data <- function(){
+  # Note to students: Make sure you have installed the tidyverse and fs packages
+  #                   before beginning this assignment. If you aren't sure,
+  #                   simply run `library(tidyverse)` at your R Console and, if
+  #                   you don't see an error message, `tidyverse` has been 
+  #                   installed. (Same for `fs`) If you still need to install
+  #                   either package, use the `install.packages` function as 
+  #                   demonstrated in class.
+  library(tidyverse)
+  library(rvest)
+  library(readxl)
+  library(fs)
+  
+  data_dir <- path("data", "mp01")
+  
+  if(!dir_exists(data_dir)){
+    dir_create(data_dir, showWarnings=FALSE, recurse=TRUE)
+  }
+  
+  NETFLIX_URLS <- list(
+    `2023H1` = "https://about.netflix.com/news/what-we-watched-a-netflix-engagement-report",
+    `2023H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2023",
+    `2024H1` = "https://about.netflix.com/news/what-we-watched-the-first-half-of-2024",
+    `2024H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2024",
+    `2025H1` = "https://about.netflix.com/news/what-we-watched-the-first-half-of-2025",
+    `2025H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2025",
+    `2026H1` = "https://about.netflix.com/news/what-we-watched-the-first-half-of-2026"
+  )
+  
+  download_if_needed <- function(url, local){
+    if(!file_exists(local)){
+      download.file(url, local, quiet = TRUE, mode = "wb")
+    }
+    
+    return(local)
+  }
+  
+  NETFLIX_URLS |> 
+    map(read_html) |> 
+    map(html_element, xpath = "//a[contains(@href, '.xlsx')]") |> 
+    map_chr(html_attr, "href") |> 
+    enframe("period", "url") |> 
+    mutate(path = path(data_dir, paste0(period, ".xlsx")), 
+           path = map2(url, path, download_if_needed), 
+           data = map(path, read_excel, skip=3, na="*"), 
+           data = map(data, \(x) x |> mutate(`Release Date` = as.Date(`Release Date`)))) |>
+    unnest(data) |> 
+    select(-url, -path) |> 
+    mutate(year=str_sub(period, 1, 4), 
+           half=str_sub(period, start=6), 
+           period_start = make_date(year, if_else(half==1, 1, 7), 1), 
+           period_end = make_date(year, if_else(half==1, 6, 12), if_else(half==1, 30, 31))) |> 
+    filter(!is.na(`Hours Viewed`)) |> 
+    mutate(live_event = !is.na(Runtime) & str_detect(Runtime, "\\d+:\\d+\\*"), 
+           clean_time = str_remove(Runtime, fixed("*")),
+           Runtime = 60 * hour(hm(clean_time)) + minute(hm(clean_time))) |>
+    select(-clean_time) |>
+    mutate(Runtime = coalesce(Runtime, mean(Runtime, na.rm=TRUE)), 
+           .by=Title, 
+           Title = stringi::stri_trans_general(Title, "Latin-ASCII"),
+           Title = str_remove(Title, " // .*"), 
+           Title = str_remove(Title, "[^[:ascii:]].*"), 
+           Title = str_trim(Title)) |>
+    filter_out(Title == "") |>
+    select(year, 
+           period, 
+           period_start, 
+           period_end, 
+           Title, 
+           -half, 
+           Runtime, 
+           Views, 
+           `Hours Viewed`, 
+           `Release Date`,
+           `Available Globally?`, 
+           live_event) |>
+    rename(title = Title, runtime = Runtime, views = Views,
+           hours_viewed = `Hours Viewed`, release = `Release Date`,
+           avail_global = `Available Globally?`) |>
+    mutate(year = as.integer(year), avail_global = avail_global == "Yes")
+}
+
+```
+
+Variables used: 
+
+```{r}
+#| output: false
+NETFLIX_DATA <- load_netflix_data()
+```
+
+
+## Exploratory Data Analysis
+
+Initial EDA pass to check data types, make sure all changes made to code function as intended, and take a look at basic statistics to see if anything stands out. First impression: there are quite a few data points missing from "runtime", "release", and "views", which will hinder my ability to get a full picture of Netflix's true performance. However, if we simply remove these missing values from the working data set, we can at least see what the behavior is like above a minimum value for these variables. One statistic that stands out to me is the median runtime (320 minutes) versus the mean (467.35 minutes). I would be curious to know if that difference is significant and, if it is, what skewed runtimes would mean in terms of views.
+```{r}
+glimpse(NETFLIX_DATA)
+library(skimr)
+skim(NETFLIX_DATA)
+
+```
+## Answers to the first round of questions
+
+```{r}
+library(dplyr)
+library(scales)
+#Question 1
+start <- min(NETFLIX_DATA$period_start)
+end <- max(NETFLIX_DATA$period_end)
+
+#Question 2
+shows <- nrow(NETFLIX_DATA)
+
+#Question 3
+bridgerton <- NETFLIX_DATA |> 
+  filter(str_detect(title, "Bridgerton")) |>
+  pull(hours_viewed) |>
+  sum()
+
+#Question 4
+stranger <- NETFLIX_DATA |> filter(str_detect(title, "Stranger Things")) |> 
+    filter_out(str_detect(title, "Beyond Stranger Things")) |> 
+    filter_out(str_detect(title, "Stranger Things: Fireplace")) |>
+    filter_out(str_detect(title, "Stranger Things: Tales From '85")) |> 
+    pull(hours_viewed) |>
+    sum()
+
+#Question 5
+top10_hours <- NETFLIX_DATA |> filter(period == "2026H1") |> 
+  arrange(desc(hours_viewed)) |> 
+  slice(1:10) |>
+  pull(hours_viewed) |>
+  sum()
+
+total_hours <- NETFLIX_DATA |> filter(period == "2026H1") |>
+  pull(hours_viewed) |>
+  sum()
+
+top10_percent <- top10_hours/total_hours
+
+#Question 6
+global_titles <- NETFLIX_DATA |>
+  filter(avail_global == TRUE) |> nrow()
+total_titles <- nrow(NETFLIX_DATA)
+
+title_percent <- global_titles/total_titles
+
+global_hours <- NETFLIX_DATA |>
+  filter(avail_global == TRUE) |> 
+  pull(hours_viewed) |>
+  sum()
+total_hours <- sum(NETFLIX_DATA$hours_viewed)
+
+hours_percent <- global_hours/total_hours
+
+```
+1. The date range covered by the data is from `r start` to `r end`.
+
+2. There are `r comma(shows)` different shows in this data set. 
+
+3. Viewers spent a total of `r comma(bridgerton)` hours watching the *Bridgerton* universe of shows.  
+
+4. Viewers spent a total of `r comma(stranger)` hours watching the original 
+seasons of *Stranger Things*.
+
+5. The Top 10 titles of the first half of 2026 account for `r percent(top10_percent)` of total hours viewed during that period.  
+
+6. The percentage of Netflix's catalog that is globally available by title is `r percent(title_percent)`, while the percentage that is globally available by hours viewed is `r percent(hours_percent)`.
+
+## Answers to the second round of questions in table format
+1. List of top titles in each period and their share of total viewership 
+```{r}
+library(gt)
+top_shows_table <- NETFLIX_DATA |> 
+  group_by(period) |> 
+  mutate(percent_viewership = hours_viewed / sum(hours_viewed)) |> 
+  #Adds a column with percentage of viewership
+  slice_max(hours_viewed, n = 1) |>  # Finds the #1 show per period
+  select(period, title, hours_viewed, percent_viewership) |>
+  ungroup() |>
+  gt() |>  # Keeps only the rows you want to display  
+  tab_header(title = "Netflix's Most Watched Shows By Period") |>
+  cols_label(period = "Period",
+             title = "Title",
+             hours_viewed = "Hours Viewed",
+             percent_viewership = "Percent Viewership") |> 
+  fmt_number(hours_viewed, decimals = 0) |>
+  fmt_percent(percent_viewership, decimals = 5)
+top_shows_table
+
+
+```
+2. Netflix's catalog size trend by titles and runtime. There is a general upward trend in both runtime and total titles. The apparent discrepancy with the first half of 2023 was due to a variation in Netflix's reporting method at the time. 
+```{r}
+#1. Aggregate catalog metrics per reporting period
+catalog_trends <- NETFLIX_DATA |> 
+  group_by(period) |> 
+  summarise(
+    # Total distinct titles tracked in the report
+    total_titles = n_distinct(title),
+    
+    # Total runtime of all catalog content in minutes
+    total_runtime_mins = sum(runtime, na.rm = TRUE),
+    
+    .groups = "drop"
+  )
+
+#2. Build a polished summary table using gt
+catalog_trends |> 
+  gt() |> 
+  tab_header(
+    title = "Evolution of Netflix's Catalog Size",
+    subtitle = "Tracking changes in unique titles and total content volume by reporting period"
+  ) |> 
+  cols_label(
+    period = "Report Period",
+    total_titles = "Total Titles",
+    total_runtime_mins = "Total Content (Minutes)",
+  ) |> 
+  fmt_integer(
+    columns = c(total_titles, total_runtime_mins)
+  ) |> 
+  tab_options(
+    heading.title.font.weight = "bold"
+  )
+```
+3. List of all the titles with viewership at least one standard deviation above the mean in every period.  
+```{r}
+
+# 1. Determine the total number of periods available in the data
+total_periods <- n_distinct(NETFLIX_DATA$period)
+
+# 2. Identify titles that are 1 SD above the mean in EVERY period
+highly_viewed_staples <- NETFLIX_DATA |> 
+  group_by(period) |> 
+  mutate(
+    # Calculate the threshold for 1 Standard Deviation above the Mean for each specific period
+    sd_threshold = mean(hours_viewed, na.rm = TRUE) + sd(hours_viewed, na.rm = TRUE)
+  ) |> 
+  # Keep only the rows where a show beat its period's threshold
+  filter(hours_viewed >= sd_threshold) |> 
+  ungroup() |> 
+  
+  # Group by title to see how consistently they achieved this across periods
+  group_by(title) |> 
+  summarise(
+    periods_above_threshold = n_distinct(period),
+    overall_avg_hours       = mean(hours_viewed, na.rm = TRUE),
+    overall_min_hours       = min(hours_viewed, na.rm = TRUE),
+    .groups = "drop"
+  ) |> 
+  # CRITICAL FILTER: The title must have met the condition in ALL periods
+  filter(periods_above_threshold == total_periods) |> 
+  arrange(desc(overall_min_hours))
+
+# 3. Render into a clean summary table
+highly_viewed_staples |> 
+  select(title, overall_avg_hours, overall_min_hours) |> 
+  gt() |> 
+  tab_header(
+    title = "Netflix Elite Staples",
+    subtitle = "Titles with viewership at least 1 standard deviation above the mean in every reporting period"
+  ) |> 
+  cols_label(
+    title = "Show Title",
+    overall_avg_hours = "Average Hours / Period",
+    overall_min_hours = "Lowest Period (Minimum Hours)"
+  ) |> 
+  fmt_integer(
+    columns = c(overall_avg_hours, overall_min_hours)
+  ) |> 
+  tab_options(
+    heading.title.font.weight = "bold"
+  )
+```
+4. Viewership breakdown per period, movies versus shows. I omitted all titles whose runtimes were not available and defined a movie title as any with a runtime under four hours. Viewers clearly spend more time watching shows versus movies at roughly . 
+```{r}
+# 1. Filter out missing runtimes, classify, and compute viewership share
+format_share_table_clean <- NETFLIX_DATA |> 
+  # CRITICAL FIX: Drops rows where runtime is missing (NA)
+  filter(!is.na(runtime)) |> 
+  mutate(
+    # Classify everything strictly less than 240 mins as Movie, else Show
+    content_type = if_else(runtime < 240, "Movie", "Show")
+  ) |> 
+  group_by(period, content_type) |> 
+  summarise(
+    type_hours = sum(hours_viewed, na.rm = TRUE),
+    .groups = "drop_last" # Leaves group by period active for the division step
+  ) |> 
+  mutate(
+    # Calculate fraction of time spent on this category within the specific period
+    time_fraction = type_hours / sum(type_hours)
+  ) |> 
+  ungroup()
+
+# 2. Pivot the data wider for a side-by-side layout
+format_share_table_clean |> 
+  select(period, content_type, time_fraction) |> 
+  pivot_wider(
+    names_from = content_type, 
+    values_from = time_fraction
+  ) |> 
+  # 3. Render beautifully with gt
+  gt() |> 
+  tab_header(
+    title = "Viewership Share: Shows vs. Movies (Cleaned Data)",
+    subtitle = "Excludes titles with missing runtimes. Movies defined as titles under 240 minutes."
+  ) |> 
+  cols_label(
+    period = "Period",
+    Movie = "Movies Share",
+    Show = "Shows Share"
+  ) |> 
+  fmt_percent(
+    columns = c(Movie, Show),
+    decimals = 1
+  ) |> 
+  tab_options(
+    heading.title.font.weight = "bold"
+  )
+
+```
+5. General viewership and the viewership of the top 1% for live events versus recorded content. Given the vastly smaller number of live events (roughly 20x less total titles), the resulting viewership is about equal in general and a little less than half in the top 1%. This result signals a potential opportunity for Netflix to shift focus in 2027.
+```{r}
+# 1. Compute Average and 'Top Tier' metrics using views instead of hours
+live_vs_pre_views <- NETFLIX_DATA |> 
+  group_by(live_event) |> 
+  summarise(
+    # Count of entries in this category
+    total_titles = n_distinct(title),
+    
+    # Standard Average (Mean) Views
+    mean_views   = mean(views, na.rm = TRUE),
+    
+    # 'Top Tier' Performance (99th percentile of views)
+    top_tier_views = quantile(views, probs = 0.99, na.rm = TRUE),
+    
+    .groups = "drop"
+  ) |> 
+  # Clean up labels for the final display
+  mutate(content_format = if_else(live_event == TRUE, "Live Event", "Pre-Taped Content"))
+
+# 2. Render beautifully with gt
+live_vs_pre_views |> 
+  select(content_format, total_titles, mean_views, top_tier_views) |> 
+  gt() |> 
+  tab_header(
+    title = "Performance Analysis: Live Events vs. Pre-Taped Content",
+    subtitle = "Comparing typical performance and elite top-tier boundaries using standardized Views"
+  ) |> 
+  cols_label(
+    content_format = "Content Format",
+    total_titles = "Total Titles Logged",
+    mean_views = "Average Views (Mean)",
+    top_tier_views = "Top Tier Boundary (99th Percentile Views)"
+  ) |> 
+  fmt_integer(
+    columns = c(total_titles, mean_views, top_tier_views)
+  ) |> 
+  tab_options(
+    heading.title.font.weight = "bold"
+  )
+
+```
+
+## Final Insights and Deliverable
+
+*Platform Strategy Memo*
+
+From my analysis, there are some clear opportunities for growth in 2027, if Netflix commits budgetary power to a couple of key areas. The first area of potential interest is increasing offerings of live events. Considering the weight of average views per live event is about 13.4% higher than that of recorded content, focusing on licensing or hosting more live events would undoubtedly have a positive impact on subscriptions. The cost could be mitigated by mixing in low- and mid-tier sports offerings. One major advantage of top-tier live events is the potential for paid content. Pay-per-views would be an attractive opportunity to capture additional revenue for top-tier live events. Finally, adding live news and politics may also attract more people among older demographics, thereby increasing the variety of the Netflix subscriber base.
+
+Another area of potential interest is increasing globally available content. According to the data, globally available content accounts for 52% of the hours viewed yet only 35% of Netflix’s titles are globally available. This could be remedied by expanding the reach of existing catalog content, adding more subtitled/dubbed features, and creating new, more culturally versatile content. Also, partnerships with international studios (as in the case of *Squid Games*) would allow Netflix to produce original content at significantly lower cost, thereby increasing the viewership gain per value cost. 
+
+The last area of potential is in the consistent gap between hours spent watching movies versus watching shows. The ratio of hours spent watching shows versus movies is roughly 9-to1, yet the cost of producing a movie versus a show is significantly higher per hour of content. This means the viewership gain per value cost is much lower for movies than it is for shows. My recommendation is for Netflix to start producing more theatrical releases alongside their usual platform releases. This would allow Netflix an opportunity to capture more revenue at lower cost, considering advertising on their own platform would greatly reduce marketing overhead. It would also allow Netflix to attract potential subscribers both domestically and globally. 
+
+Although Netflix is a powerhouse and leader in the streaming sector, there are still avenues for improvement and optimization. By increasing the number of live events per year, reworking the existing catalog to include more cultural diversity, and producing more theatrical movie releases, Netflix can realize much higher earning potential in 2027. 
+
+ 
+
+
+::: {.callout-note title="AI Usage Statement" collapse="true"}
+
+Google Gemini was used to help write some of the code in this project, but all non-code text was generated without the use of any Generative AI tools. 
+
+:::
+------------------------------------------------------------------------
+
+This work ©2025 by {PhilipLopezJr} was initially prepared as a Mini-Project for
+STA 9750 at Baruch College. More details about this course can be found at
+[the course site](https://michael-weylandt.com/STA9750) and instructions for
+this assignment can be found at 
+[MP #01](https://michael-weylandt.com/STA9750/mini/mini01.html)
