@@ -261,7 +261,7 @@ summary(EIA_SEP_REPORT)
 summary(NTD_ENERGY)
 summary(NTD_SERVICE)
 ```
-## Exploratory Data Analysis
+
 
 
 ```{r}
@@ -294,14 +294,127 @@ NTD_ENERGY <- NTD_ENERGY |>
 
 ```
 
+## Exploratory Data Analysis 
+```{r}
+#Task 3a: Initial Analysis of SEP Data
+#Question 1
+library(tidyverse)
+
+# 1. Filter out the top 5 most expensive states
+top_5_expensive <- EIA_SEP_REPORT |> 
+  slice_max(electricity_price_MWh, n = 5)
+
+# 2. Build the bar chart
+ggplot(top_5_expensive, aes(x = electricity_price_MWh, y = reorder(state, electricity_price_MWh))) +
+  geom_col(fill = "darkgreen") +
+  # Add labels to the ends of the bars formatted as currency
+  geom_text(aes(label = scales::dollar(electricity_price_MWh)), 
+            hjust = -0.1, fontface = "bold") +
+  # Expand the x-axis limits slightly to ensure labels don't get cut off
+  scale_x_continuous(labels = scales::dollar_format(), expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Top 5 States with the Most Expensive Electricity Prices",
+    x = "Average Retail Price (per MWh)",
+    y = "State"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text = element_text(size = 11)
+  )
+```
+
 
 ```{r}
+#Question 2
+library(tidyverse)
+library(gt)
+
+# 1. Filter top 5 states and calculate row-wide color hex codes
+top_5_dirty <- EIA_SEP_REPORT |> 
+  slice_max(CO2_MWh, n = 5) |> 
+  mutate(
+    State = paste0(state, ", (", abbreviation, ")"),
+    row_color = scales::col_numeric(palette = c("#F5F5DC", "#8B4513"), domain = NULL)(CO2_MWh)
+  ) |> 
+  select(
+    `CO2 Emitted Per MWh of Electricity Produced (lbs)` = CO2_MWh,
+    `Primary Source of Electricity Generation` = primary_source,
+    `Average Retail Price (per MWh)` = electricity_price_MWh,
+    `Total Generation Capacity (MWh)` = generation_MWh,
+    State,
+    row_color
+  )
+
+# 2. Build table structure and apply text/number formatting
+dirty_table <- top_5_dirty |> 
+  select(-row_color) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Top 5 States with the Dirtiest Electricity Mixes**"), # Bold Title
+    subtitle = md("*Ranked by highest pounds of CO2 emitted per Megawatthour (MWh)*") # Italic Subtitle
+  ) |> 
+  fmt_currency(columns = `Average Retail Price (per MWh)`, decimals = 2) |> 
+  fmt_integer(columns = c(`Total Generation Capacity (MWh)`, `CO2 Emitted Per MWh of Electricity Produced (lbs)`), use_seps = TRUE) |> 
+  
+  # 3. Style Header Block (Grey background and bold labels)
+  tab_style(
+    style = list(
+      cell_fill(color = "#EFEFEF"), # Clean light grey background
+      cell_text(weight = "bold")    # Bold lettering
+    ),
+    locations = list(
+      cells_column_labels(columns = everything()), # Bold all column labels
+      cells_title(groups = "title")                # Apply to title block
+    )
+  )
+
+# 4. Apply the synchronized brown colors to each body row
+for(i in 1:nrow(top_5_dirty)) {
+  dirty_table <- dirty_table |> 
+    tab_style(
+      style = cell_fill(color = top_5_dirty$row_color[i], alpha = 0.5),
+      locations = cells_body(rows = i)
+    )
+}
+
+# Display the styled table
+dirty_table
 
 
 ```
 
+```{r}
+#Question 3
+library(tidyverse)
+
+# Calculate the weighted national average
+us_weighted_co2 <- EIA_SEP_REPORT |> 
+  summarize(
+    total_emissions_lbs = sum(CO2_MWh * generation_MWh, na.rm = TRUE),
+    total_generation_MWh = sum(generation_MWh, na.rm = TRUE),
+    weighted_avg_lbs_MWh = total_emissions_lbs / total_generation_MWh
+  ) |> 
+  pull(weighted_avg_lbs_MWh)
+
+# Print a nicely rounded answer
+round(us_weighted_co2, 1)
+
+```
+On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh of electricity produced in the US.
 
 
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
 
 ```{r}
 
