@@ -397,15 +397,76 @@ us_weighted_co2 <- EIA_SEP_REPORT |>
   ) |> 
   pull(weighted_avg_lbs_MWh)
 
-# Print a nicely rounded answer
-round(us_weighted_co2, 1)
-
 ```
 On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh of electricity produced in the US.
 
 
 ```{r}
+#Task 3b: Explore NTD Service Data
+#Question 1
+library(tidyverse)
+library(gt)
 
+# 1. Identify fuel gallon columns, calculate row-wide totals, and find top 5 agencies
+top_5_fuel_agencies <- NTD_ENERGY |>
+  # Compute total physical gallons per row across all fuel columns containing "Gallons"
+  rowwise() |>
+  mutate(
+    row_total_gallons = sum(c_across(contains("Gallons")), na.rm = TRUE)
+  ) |>
+  ungroup() |>
+  # Group strictly by agency name to combine modes (e.g., combining their Motorbus & Vanpool)
+  group_by(`Agency Name`) |>
+  summarize(
+    `Diesel (Gallons)`           = sum(`Gallons of Diesel Fuel`, na.rm = TRUE),
+    `Gasoline (Gallons)`         = sum(`Gallons of Gasoline`, na.rm = TRUE),
+    `Compressed Nat. Gas (CNG)`  = sum(`Gallons of Compressed Natural Gas`, na.rm = TRUE),
+    `Total Gallons (All Fuel)`   = sum(row_total_gallons, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  # Isolate the top 5 highest consumers
+  slice_max(`Total Gallons (All Fuel)`, n = 5) |>
+  # Assign brown gradient hex codes row-by-row based on fuel intensity
+  mutate(
+    row_color = scales::col_numeric(palette = "Blues", domain = NULL)(`Total Gallons (All Fuel)`)
+  )
+
+# 2. Render the formatted gt table
+fuel_table <- top_5_fuel_agencies |>
+  select(-row_color) |> # Drop helper column from visual layout
+  gt() |>
+  tab_header(
+    title = md("**Top 5 Transit Agencies by Total Fuel Consumption**"),
+    subtitle = md("*Consumption breakdown for gallons of liquid fuel and natural gas*")
+  ) |>
+  # Add comma formatting for all numeric columns
+  fmt_integer(
+    columns = where(is.numeric),
+    use_seps = TRUE
+  ) |>
+  # Style header block: Bold labels with light grey background
+  tab_style(
+    style = list(
+      cell_fill(color = "#EFEFEF"),
+      cell_text(weight = "bold")
+    ),
+    locations = list(
+      cells_column_labels(columns = everything()),
+      cells_title(groups = "title")
+    )
+  )
+
+# 3. Apply uniform row-wide brown colors with light opacity for readability
+for(i in 1:nrow(top_5_fuel_agencies)) {
+  fuel_table <- fuel_table |>
+    tab_style(
+      style = cell_fill(color = top_5_fuel_agencies$row_color[i], alpha = 0.5),
+      locations = cells_body(rows = i)
+    )
+}
+
+# Display the final table
+fuel_table
 ```
 
 ```{r}
