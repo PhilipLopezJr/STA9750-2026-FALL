@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Philip Lopez Jr">
+<meta name="dcterms.date" content="2026-11-08">
 
-<title>Mini-Project Placeholder – STA 9750 Submission Material</title>
+<title>ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES – STA 9750 Submission Material</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-187920c3e9e68b7d1e7fefe4a2aeab8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-fbfffd53e612ab2c1d859e2bf652f7fd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -103,14 +140,27 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mini-Project Placeholder</h1>
+<h1 class="title">ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES</h1>
+<p class="subtitle lead"><strong><em>Green Transit Authority (GTA) Executive Director Philip Lopez Jr awards [insert winners] for their outstanding commitment to sustainability</em></strong></p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Philip Lopez Jr </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 8, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -120,9 +170,131 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a placeholder for STA9750 Mini-Project 2. Check back soon for more!</p>
+<p><strong>FOR IMMEDIATE RELEASE</strong></p>
+<p><strong>New York City, NY — November 8th, 2026</strong> — The nation’s top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI’s are awarded according to agency size: small, medium, and large.</p>
+<section id="data-acquisition-and-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-acquisition-and-preparation">Data Acquisition and Preparation</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>get_eia_sep <span class="ot">&lt;-</span> <span class="cf">function</span>(state, abbr){</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(stringr)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(httr2)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(rvest)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(fs)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    state_formatted <span class="ot">&lt;-</span> <span class="fu">str_to_lower</span>(state) <span class="sc">|&gt;</span> <span class="fu">str_replace_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s"</span>, <span class="st">""</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    dir_name <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(<span class="st">"data"</span>, <span class="st">"mp02"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    file_name <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(dir_name, state_formatted)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    fs<span class="sc">::</span><span class="fu">dir_create</span>(dir_name, <span class="at">recurse=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(file_name)){</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        BASE_URL <span class="ot">&lt;-</span> <span class="st">"https://www.eia.gov"</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        RESPONSE <span class="ot">&lt;-</span> <span class="fu">request</span>(BASE_URL) <span class="sc">|&gt;</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>          <span class="fu">req_url_path</span>(<span class="st">"electricity"</span>, </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"state"</span>, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                       state_formatted) <span class="sc">|&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="fu">req_headers</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">User-Agent</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:149.0) Gecko/20100101 Firefox/149.0"</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|&gt;</span>   </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>          <span class="fu">req_retry</span>(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">max_tries =</span> <span class="dv">4</span>, </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>          ) <span class="sc">|&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>          <span class="fu">req_perform</span>(file_name)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">resp_check_status</span>(RESPONSE)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    TABLE <span class="ot">&lt;-</span> <span class="fu">read_html</span>(file_name) <span class="sc">|&gt;</span> </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">html_table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">Item =</span> <span class="fu">str_to_lower</span>(Item))</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="st">"U.S. rank"</span> <span class="sc">%in%</span> <span class="fu">colnames</span>(TABLE)){</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        TABLE <span class="ot">&lt;-</span> TABLE <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">Rank =</span> <span class="st">`</span><span class="at">U.S. rank</span><span class="st">`</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    CO2_MWh <span class="ot">&lt;-</span> TABLE <span class="sc">|&gt;</span> </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(Item <span class="sc">==</span> <span class="st">"carbon dioxide (lbs/mwh)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pull</span>(Value) <span class="sc">|&gt;</span> </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_replace_all</span>(<span class="st">","</span>, <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.numeric</span>()</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    PRIMARY <span class="ot">&lt;-</span> TABLE <span class="sc">|&gt;</span> </span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(Item <span class="sc">==</span> <span class="st">"primary energy source"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pull</span>(Rank)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    RATE <span class="ot">&lt;-</span> TABLE <span class="sc">|&gt;</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(Item <span class="sc">==</span> <span class="st">"average retail price (cents/kwh)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pull</span>(Value) <span class="sc">|&gt;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.numeric</span>()</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    GENERATION_MWh <span class="ot">&lt;-</span> TABLE <span class="sc">|&gt;</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(Item <span class="sc">==</span> <span class="st">"net generation (megawatthours)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pull</span>(Value) <span class="sc">|&gt;</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_replace_all</span>(<span class="st">","</span>, <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.numeric</span>()</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">CO2_MWh               =</span> CO2_MWh, </span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>               <span class="at">primary_source        =</span> PRIMARY,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>               <span class="at">electricity_price_MWh =</span> RATE <span class="sc">*</span> <span class="dv">10</span>, <span class="co"># / 100 cents to dollars &amp;</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>               <span class="co"># * 1000 kWh to MWH </span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>               <span class="at">generation_MWh        =</span> GENERATION_MWh, </span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>               <span class="at">state                 =</span> state, </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>               <span class="at">abbreviation          =</span> abbr</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>EIA_SEP_REPORT <span class="ot">&lt;-</span> <span class="fu">map2</span>(state.name, state.abb, get_eia_sep) <span class="sc">|&gt;</span> <span class="fu">list_rbind</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Variables used:</p>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+</section>
+<section id="answers-to-the-first-round-of-questions" class="level2">
+<h2 class="anchored" data-anchor-id="answers-to-the-first-round-of-questions">Answers to the first round of questions</h2>
+</section>
+<section id="answers-to-the-second-round-of-questions-in-table-format" class="level2">
+<h2 class="anchored" data-anchor-id="answers-to-the-second-round-of-questions-in-table-format">Answers to the second round of questions in table format</h2>
+</section>
+<section id="final-insights-and-deliverable" class="level2">
+<h2 class="anchored" data-anchor-id="final-insights-and-deliverable">Final Insights and Deliverable</h2>
+<p><em>Platform Strategy Memo</em></p>
+<p>From my analysis, there are some clear opportunities for growth in 2027, if Netflix commits budgetary power to a couple of key areas. The first area of potential interest is increasing offerings of live events. Considering the weight of average views per live event is about 13.4% higher than that of recorded content, focusing on licensing or hosting more live events would undoubtedly have a positive impact on subscriptions. The cost could be mitigated by mixing in low- and mid-tier sports offerings. One major advantage of top-tier live events is the potential for paid content. Pay-per-views would be an attractive opportunity to capture additional revenue for top-tier live events. Finally, adding live news and politics may also attract more people among older demographics, thereby increasing the variety of the Netflix subscriber base.</p>
+<p>Another area of potential interest is increasing globally available content. According to the data, globally available content accounts for 52% of the hours viewed yet only 35% of Netflix’s titles are globally available. This could be remedied by expanding the reach of existing catalog content, adding more subtitled/dubbed features, and creating new, more culturally versatile content. Also, partnerships with international studios (as in the case of <em>Squid Games</em>) would allow Netflix to produce original content at significantly lower cost, thereby increasing the viewership gain per value cost.</p>
+<p>The last area of potential is in the consistent gap between hours spent watching movies versus watching shows. The ratio of hours spent watching shows versus movies is roughly 9-to1, yet the cost of producing a movie versus a show is significantly higher per hour of content. This means the viewership gain per value cost is much lower for movies than it is for shows. My recommendation is for Netflix to start producing more theatrical releases alongside their usual platform releases. This would allow Netflix an opportunity to capture more revenue at lower cost, considering advertising on their own platform would greatly reduce marketing overhead. It would also allow Netflix to attract potential subscribers both domestically and globally.</p>
+<p>Although Netflix is a powerhouse and leader in the streaming sector, there are still avenues for improvement and optimization. By increasing the number of live events per year, reworking the existing catalog to include more cultural diversity, and producing more theatrical movie releases, Netflix can realize much higher earning potential in 2027.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="AI Usage Statement">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>AI Usage Statement
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Google Gemini was used to help write some of the code in this project, but all non-code text was generated without the use of any Generative AI tools.</p>
+</div>
+</div>
+</div>
+<hr>
+<p>This work ©2025 by {PhilipLopezJr} was initially prepared as a Mini-Project for STA 9750 at Baruch College. More details about this course can be found at <a href="https://michael-weylandt.com/STA9750">the course site</a> and instructions for this assignment can be found at <a href="https://michael-weylandt.com/STA9750/mini/mini01.html">MP #01</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

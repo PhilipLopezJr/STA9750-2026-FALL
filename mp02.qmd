@@ -1,5 +1,157 @@
----
-title: "Mini-Project Placeholder"
----
 
-This is a placeholder for STA9750 Mini-Project 2. Check back soon for more!
+---
+title: "ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES"
+subtitle: "***Green Transit Authority (GTA) Executive Director Philip Lopez Jr awards [insert winners] for their outstanding commitment to sustainability***"
+date: "2026-11-08"
+author: "Philip Lopez Jr"
+editor:
+  mode: source
+format: 
+  html:
+    theme: minty
+    code-fold: true
+---
+**FOR IMMEDIATE RELEASE**
+
+**New York City, NY --- November 8th, 2026** --- The nation's top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI's are awarded according to agency size: small, medium, and large.    
+
+## Data Acquisition and Preparation
+
+```{r}
+#| output: false
+library(tidyverse)
+library(stringr)
+library(httr2)
+library(rvest)
+
+get_eia_sep <- function(state, abbr){
+    library(tidyverse)
+    library(stringr)
+    library(httr2)
+    library(rvest)
+    library(fs)
+  
+    state_formatted <- str_to_lower(state) |> str_replace_all("\\s", "")
+    
+    dir_name <- fs::path("data", "mp02")
+    file_name <- fs::path(dir_name, state_formatted)
+    
+    fs::dir_create(dir_name, recurse=TRUE)
+    
+    if(!fs::file_exists(file_name)){
+        BASE_URL <- "https://www.eia.gov"
+        RESPONSE <- request(BASE_URL) |> 
+          req_url_path("electricity", 
+                       "state", 
+                       state_formatted) |>
+          req_headers(
+            `User-Agent` = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:149.0) Gecko/20100101 Firefox/149.0"
+            ) |>   
+          req_retry(
+                max_tries = 4, 
+          ) |>
+          req_perform(file_name)
+    
+        resp_check_status(RESPONSE)
+    }
+    
+    TABLE <- read_html(file_name) |> 
+        html_element("table") |> 
+        html_table() |>
+        mutate(Item = str_to_lower(Item))
+    
+    if("U.S. rank" %in% colnames(TABLE)){
+        TABLE <- TABLE |> rename(Rank = `U.S. rank`)
+    }
+    
+    CO2_MWh <- TABLE |> 
+        filter(Item == "carbon dioxide (lbs/mwh)") |>
+        pull(Value) |> 
+        str_replace_all(",", "") |>
+        as.numeric()
+    
+    PRIMARY <- TABLE |> 
+        filter(Item == "primary energy source") |> 
+        pull(Rank)
+    
+    RATE <- TABLE |>
+        filter(Item == "average retail price (cents/kwh)") |>
+        pull(Value) |>
+        as.numeric()
+    
+    GENERATION_MWh <- TABLE |>
+        filter(Item == "net generation (megawatthours)") |>
+        pull(Value) |>
+        str_replace_all(",", "") |>
+        as.numeric()
+    
+    data.frame(CO2_MWh               = CO2_MWh, 
+               primary_source        = PRIMARY,
+               electricity_price_MWh = RATE * 10, # / 100 cents to dollars &
+               # * 1000 kWh to MWH 
+               generation_MWh        = GENERATION_MWh, 
+               state                 = state, 
+               abbreviation          = abbr
+    )
+}
+
+EIA_SEP_REPORT <- map2(state.name, state.abb, get_eia_sep) |> list_rbind()
+
+```
+
+Variables used: 
+
+```{r}
+#| output: false
+
+```
+
+
+## Exploratory Data Analysis
+
+
+```{r}
+
+
+```
+## Answers to the first round of questions
+
+```{r}
+
+
+```
+
+
+## Answers to the second round of questions in table format
+
+```{r}
+
+```
+
+## Final Insights and Deliverable
+
+*Platform Strategy Memo*
+
+From my analysis, there are some clear opportunities for growth in 2027, if Netflix commits budgetary power to a couple of key areas. The first area of potential interest is increasing offerings of live events. Considering the weight of average views per live event is about 13.4% higher than that of recorded content, focusing on licensing or hosting more live events would undoubtedly have a positive impact on subscriptions. The cost could be mitigated by mixing in low- and mid-tier sports offerings. One major advantage of top-tier live events is the potential for paid content. Pay-per-views would be an attractive opportunity to capture additional revenue for top-tier live events. Finally, adding live news and politics may also attract more people among older demographics, thereby increasing the variety of the Netflix subscriber base.
+
+Another area of potential interest is increasing globally available content. According to the data, globally available content accounts for 52% of the hours viewed yet only 35% of Netflix’s titles are globally available. This could be remedied by expanding the reach of existing catalog content, adding more subtitled/dubbed features, and creating new, more culturally versatile content. Also, partnerships with international studios (as in the case of *Squid Games*) would allow Netflix to produce original content at significantly lower cost, thereby increasing the viewership gain per value cost. 
+
+The last area of potential is in the consistent gap between hours spent watching movies versus watching shows. The ratio of hours spent watching shows versus movies is roughly 9-to1, yet the cost of producing a movie versus a show is significantly higher per hour of content. This means the viewership gain per value cost is much lower for movies than it is for shows. My recommendation is for Netflix to start producing more theatrical releases alongside their usual platform releases. This would allow Netflix an opportunity to capture more revenue at lower cost, considering advertising on their own platform would greatly reduce marketing overhead. It would also allow Netflix to attract potential subscribers both domestically and globally. 
+
+Although Netflix is a powerhouse and leader in the streaming sector, there are still avenues for improvement and optimization. By increasing the number of live events per year, reworking the existing catalog to include more cultural diversity, and producing more theatrical movie releases, Netflix can realize much higher earning potential in 2027. 
+
+ 
+
+
+::: {.callout-note title="AI Usage Statement" collapse="true"}
+
+Google Gemini was used to help write some of the code in this project, but all non-code text was generated without the use of any Generative AI tools. 
+
+:::
+------------------------------------------------------------------------
+
+This work ©2025 by {PhilipLopezJr} was initially prepared as a Mini-Project for
+STA 9750 at Baruch College. More details about this course can be found at
+[the course site](https://michael-weylandt.com/STA9750) and instructions for
+this assignment can be found at 
+[MP #01](https://michael-weylandt.com/STA9750/mini/mini01.html)
