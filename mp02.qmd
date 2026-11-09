@@ -402,7 +402,7 @@ On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh 
 
 
 ```{r}
-#Task 3b: Explore NTD Service Data
+#Task 3b: Explore NTD Energy Data
 #Question 1
 library(tidyverse)
 library(gt)
@@ -426,7 +426,7 @@ top_5_fuel_agencies <- NTD_ENERGY |>
   ) |>
   # Isolate the top 5 highest consumers
   slice_max(`Total Gallons (All Fuel)`, n = 5) |>
-  # Assign brown gradient hex codes row-by-row based on fuel intensity
+  # Assign blue gradient row-by-row based on fuel intensity
   mutate(
     row_color = scales::col_numeric(palette = "Blues", domain = NULL)(`Total Gallons (All Fuel)`)
   )
@@ -456,7 +456,7 @@ fuel_table <- top_5_fuel_agencies |>
     )
   )
 
-# 3. Apply uniform row-wide brown colors with light opacity for readability
+# 3. Apply uniform row-wide colors with light opacity for readability
 for(i in 1:nrow(top_5_fuel_agencies)) {
   fuel_table <- fuel_table |>
     tab_style(
@@ -470,14 +470,84 @@ fuel_table
 ```
 
 ```{r}
+#Task 3c: Explore NTD Service Data
+#Question 1
+library(tidyverse)
+library(scales)
+
+# 1. Filter for the top 5 services by UPT
+top_5_upt <- NTD_SERVICE |> 
+  mutate(Service_Name = paste0(AGENCY, " - ", mode)) |> 
+  slice_max(total_upt, n = 5, with_ties = FALSE)
+
+# 2. Plot the graph in Millions
+ggplot(top_5_upt, aes(x = total_upt / 1e6, y = reorder(Service_Name, total_upt))) +
+  geom_col(fill = "darkcyan") +
+  geom_text(aes(label = sprintf("%.2fM", total_upt / 1e6)), 
+            hjust = -0.1, fontface = "bold", size = 3.5) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
+  labs(
+    title = "Top 5 Transit Services by Annual Unlinked Passenger Trips (UPT)",
+    x = "Annual Passenger Trips (in Millions)",
+    y = "Transit Service"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold", size = 12))
 
 ```
 
 ```{r}
+#Question 2
+# Calculate the overall average trip length for MTA NYC
+mta_nyc_length <- NTD_SERVICE |> 
+  filter(str_detect(AGENCY, "New York City Transit|MTA New York City")) |> 
+  summarize(
+    avg_length = sum(sum_passenger_miles, na.rm = TRUE) / sum(total_upt, na.rm = TRUE)
+  ) |> 
+  pull(avg_length)
 
 ```
+The average trip length for a passenger using MTA NYC Transit is **`r round(mta_nyc_length, 2)` miles.**
 
 ```{r}
+#Question 3
+# Find the specific service with the longest average trip length in NYC
+longest_nyc_service <- NTD_SERVICE |> 
+  filter(state == "NY" & str_detect(AGENCY, "New York City|MTA|Transit")) |> 
+  mutate(avg_trip_length = sum_passenger_miles / total_upt) |> 
+  filter(!is.infinite(avg_trip_length) & !is.na(avg_trip_length)) |> 
+  slice_max(avg_trip_length, n = 1)
+
+
+```
+The transit service in NYC with the longest average trip length is the **`r longest_nyc_service$AGENCY` (`r longest_nyc_service$mode`)**, with an average trip distance of **`r round(longest_nyc_service$avg_trip_length, 2)` miles** per passenger.
+
+```{r}
+#Question 4
+library(tidyverse)
+
+# 1. Aggregate and find the 5 states with the lowest transit miles
+fewest_miles_states <- NTD_SERVICE |> 
+  group_by(state) |> 
+  summarize(total_miles = sum(sum_passenger_miles, na.rm = TRUE)) |> 
+  filter(!is.na(state) & total_miles > 0) |> 
+  slice_min(total_miles, n = 5)
+
+# 2. Build the chart in Millions (or Thousands depending on your dataset values)
+ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state, -total_miles))) +
+  geom_col(fill = "darkblue") +
+  geom_text(aes(label = sprintf("%.2fM", total_miles / 1e6)), 
+            hjust = -0.1, fontface = "bold", size = 3.5) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
+  labs(
+    title = "Top 5 States with the Fewest Total Miles Travelled",
+    subtitle = "Aggregated annual passenger miles by state",
+    x = "Total Passenger Miles (in Millions)",
+    y = "State"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold", size = 12))
+
 
 ```
 
