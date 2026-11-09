@@ -19,6 +19,8 @@ format:
 
 ```{r}
 #| output: false
+#| message: false
+#| warning: false
 
 #Task 1a: Data Acquisition - State Electricity Profiles
 # ***Instructor's code*** #
@@ -133,6 +135,8 @@ EIA_SEP_REPORT |>
 ```
 ```{r}
 #| output: false
+#| message: false
+#| warning: false
 
 #Task 1b: Data Acquisition - NTD Energy Usage
 # ***Instructor's code*** #
@@ -196,6 +200,9 @@ NTD_ENERGY <- load_ntd_energy()
 ```
 ```{r}
 #| output: false
+#| message: false
+#| warning: false
+
 #Task 1c: Data Acquisition - Transit Service Provided
 # ***Instructor's code*** #
 load_ntd_service <- function(){
@@ -252,6 +259,9 @@ NTD_SERVICE <- load_ntd_service()
 
 ```{r}
 #| output: false
+#| message: false
+#| warning: false
+
 #Initial exploration
 glimpse(EIA_SEP_REPORT)
 glimpse(NTD_ENERGY)
@@ -265,6 +275,9 @@ summary(NTD_SERVICE)
 
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Task 2: Recode Mode column
 #Code definitions pulled from NTD glossary
 NTD_ENERGY <- NTD_ENERGY |>
@@ -296,6 +309,9 @@ NTD_ENERGY <- NTD_ENERGY |>
 
 ## Exploratory Data Analysis 
 ```{r}
+#| message: false
+#| warning: false
+
 #Task 3a: Initial Analysis of SEP Data
 #Question 1
 library(tidyverse)
@@ -326,6 +342,9 @@ ggplot(top_5_expensive, aes(x = electricity_price_MWh, y = reorder(state, electr
 
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Question 2
 library(tidyverse)
 library(gt)
@@ -385,6 +404,9 @@ dirty_table
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Question 3
 library(tidyverse)
 
@@ -402,6 +424,9 @@ On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh 
 
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Task 3b: Explore NTD Energy Data
 #Question 1
 library(tidyverse)
@@ -470,6 +495,9 @@ fuel_table
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Task 3c: Explore NTD Service Data
 #Question 1
 library(tidyverse)
@@ -497,6 +525,9 @@ ggplot(top_5_upt, aes(x = total_upt / 1e6, y = reorder(Service_Name, total_upt))
 ```
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Question 2
 # Calculate the overall average trip length for MTA NYC
 mta_nyc_length <- NTD_SERVICE |> 
@@ -510,6 +541,8 @@ mta_nyc_length <- NTD_SERVICE |>
 The average trip length for a passenger using MTA NYC Transit is **`r round(mta_nyc_length, 2)` miles.**
 
 ```{r}
+#| message: false
+#| warning: false
 #Question 3
 # Find the specific service with the longest average trip length in NYC
 longest_nyc_service <- NTD_SERVICE |> 
@@ -523,6 +556,9 @@ longest_nyc_service <- NTD_SERVICE |>
 The transit service in NYC with the longest average trip length is the **`r longest_nyc_service$AGENCY` (`r longest_nyc_service$mode`)**, with an average trip distance of **`r round(longest_nyc_service$avg_trip_length, 2)` miles** per passenger.
 
 ```{r}
+#| message: false
+#| warning: false
+
 #Question 4
 library(tidyverse)
 
