@@ -1,7 +1,7 @@
 
 ---
 title: "ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES"
-subtitle: "***Green Transit Authority (GTA) Executive Director awards [insert winners] for their outstanding commitment to sustainability***"
+subtitle: "***Green Transit Authority (GTA) Executive Director awards agencies for their outstanding commitment to sustainability. Others, not so much...***"
 date: "2026-11-08"
 author: "Philip Lopez Jr"
 editor:
@@ -13,7 +13,7 @@ format:
 ---
 **FOR IMMEDIATE RELEASE**
 
-**New York City, NY --- November 8th, 2026** --- The nation's top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI's are awarded according to agency size: small, medium, and large.   
+**New York City, NY --- November 8th, 2026** --- The nation's top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI's are given 'Green Awards' according to agency size: small, medium, and large. However, this year, GTA also decided to sling a bit of mud at the nation's lowest performers by offering 'Brown Awards" for high emissions. Let's dive into the data and see where the water is  crystal clear and also where it gets murky.
 
 ## Data Acquisition and Preparation
 
@@ -366,6 +366,7 @@ ggplot(top_5_expensive, aes(x = electricity_price_MWh, y = reorder(state, electr
     axis.text = element_text(size = 11)
   )
 ```
+Here, we can clearly see Hawaii tops the chart by far as the most expensive place to charge your phone. 
 
 
 ```{r}
@@ -430,6 +431,7 @@ dirty_table
 
 ```
 
+Surprisingly, Hawaii strikes again! It would seem that high prices aren't always a sign of luxury or quality. 
 ```{r}
 #| message: false
 #| warning: false
@@ -447,7 +449,7 @@ us_weighted_co2 <- EIA_SEP_REPORT |>
   pull(weighted_avg_lbs_MWh)
 
 ```
-On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh of electricity produced in the US.
+On average, **`r round(us_weighted_co2, 1)`** pounds of CO2 are emitted per MWh of electricity produced in the US. Multiply that by the total number of MWh produced annually and you can start to see why climate scientists have been sounding the alarm for decades. Yikes!
 
 
 ```{r}
@@ -520,7 +522,7 @@ for(i in 1:nrow(top_5_fuel_agencies)) {
 # Display the final table
 fuel_table
 ```
-
+Nothing too unusual here. Dense population centers tend to have complex transit systems that are more robustly used, so these numbers seem pretty reasonable.
 ```{r}
 #| message: false
 #| warning: false
@@ -554,7 +556,7 @@ ggplot(top_5_upt, aes(x = total_upt / 1e6, y = reorder(Service_Name, total_upt))
   theme(plot.title = element_text(face = "bold", size = 12))
 
 ```
-
+New York has the densest population with the lowest proportion of vehicle owners among these four cities. It's no wonder they dominate in trip volume.
 ```{r}
 #| message: false
 #| warning: false
@@ -569,7 +571,7 @@ mta_nyc_length <- NTD_SERVICE |>
   pull(avg_length)
 
 ```
-The average trip length for a passenger using MTA NYC Transit is **`r round(mta_nyc_length, 2)` miles.**
+The average trip length for a passenger using MTA NYC Transit is **`r round(mta_nyc_length, 2)` miles.** In any other city, that would be a very short trip. But in the Big Apple, it takes a little while to go a mile. This is probably a good indicator for the proportion of New Yorkers who live in the outer boroughs but work in Manhattan. 
 
 ```{r}
 #| message: false
@@ -584,7 +586,7 @@ longest_nyc_service <- NTD_SERVICE |>
 
 
 ```
-The transit service in NYC with the longest average trip length is the **`r longest_nyc_service$AGENCY` (`r longest_nyc_service$mode`)**, with an average trip distance of **`r round(longest_nyc_service$avg_trip_length, 2)` miles** per passenger.
+The transit service in NYC with the longest average trip length is the **`r longest_nyc_service$AGENCY` (`r longest_nyc_service$mode`)**, with an average trip distance of **`r round(longest_nyc_service$avg_trip_length, 2)` miles** per passenger. 
 
 ```{r}
 #| message: false
@@ -628,6 +630,7 @@ ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state_full, -
 
 
 ```
+Here we see again, transit as a function of population density. These are some of the most sparesly populated states in the Union.
 ## Data Analysis
 **Calculate Total Emissions**
 ```{r}
@@ -863,10 +866,11 @@ efficiency_awards |>
 
 
 ```
-**Identify ‘Greenest’ Transit Agencies**
+**‘Greenest’ Transit Agencies**
+
 As we can see here, California sweeps gold in all three categories! From largest to smallest by annual trips: Santa Monica, Culver City, and Redondo Beach have the greenest transit systems in the nation. Cowabunga dudes!
 
-**Identify 'Brownest' Transit Agencies**
+**'Brownest' Transit Agencies**
 ```{r}
 #| message: false
 #| warning: false
@@ -921,7 +925,7 @@ ggplot(all_winners_1v1, aes(x = Emissions_Per_UPT, y = Agency_Size, color = Awar
     title = "The Transit Efficiency Chasm: Green vs. Brown Winners",
     subtitle = "Comparing the 1-vs-1 extremes on a Logarithmic Scale (lbs CO2 per trip)",
     x = "Lbs CO2 Per Passenger Trip (Logarithmic)",
-    y = "Agency Size Category",
+    y = "",
     color = ""
   ) +
   theme_minimal() +
@@ -936,11 +940,11 @@ ggplot(all_winners_1v1, aes(x = Emissions_Per_UPT, y = Agency_Size, color = Awar
 
 
 ```
+On the other end of the spectrum we have states like Alaska, Washington, and (of course) New Jersey doing everything they can to hasten humanity's demise. Like the great humanitarian Thanos once said: "Perfectly balanced, as all things should be."
+
 ## Transit Award Press Release
-```{r}
 
-```
-
+GTA used annual Unlinked Passenger Trips as a basis for how much CO2 agencies are emitting per trip and per passenger mile. By categorizing agencies according to ridership, GTA was able to find the three best and three worst performers in the nation. Coming in at the lowest CO2 Emissions per passenger trip and representing the medium size category is CityBus out of Culver City, CA (0.0340 lbs CO2 per passenger mile). Next, we have the large agency Big Blue Bus from Santa Monica, CA (0.053 lbs CO2 per passenger mile). To finish out the Green Awards, we have the small agency of Beach Cities Transit, out of Redondo Beach, CA (0.0618 lbs CO2 per passenger mile). Continuing our ascent through the smog, we have our third place Brown Award recipient, Washington State Ferries pumping a whopping 17.8405 lbs of CO2 into the atmosphere per passenger mile. Next highest is medium-sized Seastreak from New Jersey, leaving 43.7696 streaks of brown in the water for every passenger they carry one mile. Finally, the dirtiest dog on the block: the large and in charge Alaska Railroad Corporation with a massive ***96.7474 lbs of CO2 per passenger mile!*** For reference on just how insane that number is, the Alaska Railroad Corporation emits almost 200x more CO2 than the median large agency (0.511 lbs CO2 per passenger mile). On the other end, our winner Culver CityBus emits nearly 30x ***less*** than the median for medium-sized agencies (0.925 lbs CO2 per passenger mile)   
 
 ::: {.callout-note title="AI Usage Statement" collapse="true"}
 
@@ -949,7 +953,7 @@ Google Gemini was used to help write some of the code in this project, but all n
 :::
 ------------------------------------------------------------------------
 
-This work ©2025 by {Philip Lopez Jr} was initially prepared as a Mini-Project for
+This work ©2025 by Philip Lopez Jr was initially prepared as a Mini-Project for
 STA 9750 at Baruch College. More details about this course can be found at
 [the course site](https://michael-weylandt.com/STA9750) and instructions for
 this assignment can be found at 

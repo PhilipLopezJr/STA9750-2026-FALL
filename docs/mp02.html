@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES</h1>
-<p class="subtitle lead"><strong><em>Green Transit Authority (GTA) Executive Director awards [insert winners] for their outstanding commitment to sustainability</em></strong></p>
+<p class="subtitle lead"><strong><em>Green Transit Authority (GTA) Executive Director awards agencies for their outstanding commitment to sustainability. Others, not so much…</em></strong></p>
 </div>
 
 
@@ -171,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p><strong>FOR IMMEDIATE RELEASE</strong></p>
-<p><strong>New York City, NY — November 8th, 2026</strong> — The nation’s top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI’s are awarded according to agency size: small, medium, and large.</p>
+<p><strong>New York City, NY — November 8th, 2026</strong> — The nation’s top environmental watchdog, Green Transit Alliance (GTA) keeps track of public transit emissions using the GTA Value Index (GTA VI). Each year, the three agencies with the highest GTA VI’s are given ‘Green Awards’ according to agency size: small, medium, and large. However, this year, GTA also decided to sling a bit of mud at the nation’s lowest performers by offering ’Brown Awards” for high emissions. Let’s dive into the data and see where the water is crystal clear and also where it gets murky.</p>
 <section id="data-acquisition-and-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="data-acquisition-and-preparation">Data Acquisition and Preparation</h2>
 <div class="cell">
@@ -444,8 +444,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VP"</span> <span class="sc">~</span> <span class="st">"Vanpool"</span>,</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PB"</span> <span class="sc">~</span> <span class="st">"Publico"</span>,</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OR"</span> <span class="sc">~</span> <span class="st">"Other Rail"</span>,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">default =</span> <span class="st">"Unknown"</span> <span class="co"># Matches your instructor's template directly</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">default =</span> <span class="st">"Unknown"</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>NTD_SERVICE <span class="ot">&lt;-</span> NTD_SERVICE <span class="sc">|&gt;</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Mode =</span> <span class="fu">recode_values</span>(mode, </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"HR"</span> <span class="sc">~</span> <span class="st">"Heavy Rail"</span>, </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LR"</span> <span class="sc">~</span> <span class="st">"Light Rail"</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CR"</span> <span class="sc">~</span> <span class="st">"Commuter Rail"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MG"</span> <span class="sc">~</span> <span class="st">"Monorail / Automated Guideway"</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SR"</span> <span class="sc">~</span> <span class="st">"Streetcar Rail"</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IP"</span> <span class="sc">~</span> <span class="st">"Inclined Plane"</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CC"</span> <span class="sc">~</span> <span class="st">"Cable Car"</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MB"</span> <span class="sc">~</span> <span class="st">"Motorbus"</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CB"</span> <span class="sc">~</span> <span class="st">"Commuter Bus"</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"RB"</span> <span class="sc">~</span> <span class="st">"Bus Rapid Transit"</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"TB"</span> <span class="sc">~</span> <span class="st">"Trolleybus"</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FB"</span> <span class="sc">~</span> <span class="st">"Ferryboat"</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"TR"</span> <span class="sc">~</span> <span class="st">"Aerial Tramway"</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DR"</span> <span class="sc">~</span> <span class="st">"Demand Response"</span>,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DT"</span> <span class="sc">~</span> <span class="st">"Demand Response Taxi"</span>,</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"JT"</span> <span class="sc">~</span> <span class="st">"Jitney"</span>,</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VP"</span> <span class="sc">~</span> <span class="st">"Vanpool"</span>,</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PB"</span> <span class="sc">~</span> <span class="st">"Publico"</span>,</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OR"</span> <span class="sc">~</span> <span class="st">"Other Rail"</span>,</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">default =</span> <span class="st">"Unknown"</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -548,23 +572,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>dirty_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="loaenyptry" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#loaenyptry table {
+<div id="fltdudrstq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fltdudrstq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#loaenyptry thead, #loaenyptry tbody, #loaenyptry tfoot, #loaenyptry tr, #loaenyptry td, #loaenyptry th {
+#fltdudrstq thead, #fltdudrstq tbody, #fltdudrstq tfoot, #fltdudrstq tr, #fltdudrstq td, #fltdudrstq th {
   border-style: none;
 }
 
-#loaenyptry p {
+#fltdudrstq p {
   margin: 0;
   padding: 0;
 }
 
-#loaenyptry .gt_table {
+#fltdudrstq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -590,12 +614,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#loaenyptry .gt_caption {
+#fltdudrstq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#loaenyptry .gt_title {
+#fltdudrstq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -607,7 +631,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#loaenyptry .gt_subtitle {
+#fltdudrstq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -619,7 +643,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#loaenyptry .gt_heading {
+#fltdudrstq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -631,13 +655,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#loaenyptry .gt_bottom_border {
+#fltdudrstq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#loaenyptry .gt_col_headings {
+#fltdudrstq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -652,7 +676,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#loaenyptry .gt_col_heading {
+#fltdudrstq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -672,7 +696,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#loaenyptry .gt_column_spanner_outer {
+#fltdudrstq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -684,15 +708,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#loaenyptry .gt_column_spanner_outer:first-child {
+#fltdudrstq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#loaenyptry .gt_column_spanner_outer:last-child {
+#fltdudrstq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#loaenyptry .gt_column_spanner {
+#fltdudrstq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -704,11 +728,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#loaenyptry .gt_spanner_row {
+#fltdudrstq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#loaenyptry .gt_group_heading {
+#fltdudrstq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -734,7 +758,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#loaenyptry .gt_empty_group_heading {
+#fltdudrstq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -749,15 +773,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#loaenyptry .gt_from_md > :first-child {
+#fltdudrstq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#loaenyptry .gt_from_md > :last-child {
+#fltdudrstq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#loaenyptry .gt_row {
+#fltdudrstq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -776,7 +800,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#loaenyptry .gt_stub {
+#fltdudrstq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -789,7 +813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#loaenyptry .gt_stub_row_group {
+#fltdudrstq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -803,15 +827,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#loaenyptry .gt_row_group_first td {
+#fltdudrstq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#loaenyptry .gt_row_group_first th {
+#fltdudrstq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#loaenyptry .gt_summary_row {
+#fltdudrstq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -821,16 +845,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#loaenyptry .gt_first_summary_row {
+#fltdudrstq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#loaenyptry .gt_first_summary_row.thick {
+#fltdudrstq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#loaenyptry .gt_last_summary_row {
+#fltdudrstq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -840,7 +864,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#loaenyptry .gt_grand_summary_row {
+#fltdudrstq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -850,7 +874,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#loaenyptry .gt_first_grand_summary_row {
+#fltdudrstq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -860,7 +884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#loaenyptry .gt_last_grand_summary_row_top {
+#fltdudrstq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -870,11 +894,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#loaenyptry .gt_striped {
+#fltdudrstq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#loaenyptry .gt_table_body {
+#fltdudrstq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -883,7 +907,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#loaenyptry .gt_footnotes {
+#fltdudrstq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -897,7 +921,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#loaenyptry .gt_footnote {
+#fltdudrstq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -906,7 +930,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#loaenyptry .gt_sourcenotes {
+#fltdudrstq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -920,7 +944,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#loaenyptry .gt_sourcenote {
+#fltdudrstq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -928,72 +952,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#loaenyptry .gt_left {
+#fltdudrstq .gt_left {
   text-align: left;
 }
 
-#loaenyptry .gt_center {
+#fltdudrstq .gt_center {
   text-align: center;
 }
 
-#loaenyptry .gt_right {
+#fltdudrstq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#loaenyptry .gt_font_normal {
+#fltdudrstq .gt_font_normal {
   font-weight: normal;
 }
 
-#loaenyptry .gt_font_bold {
+#fltdudrstq .gt_font_bold {
   font-weight: bold;
 }
 
-#loaenyptry .gt_font_italic {
+#fltdudrstq .gt_font_italic {
   font-style: italic;
 }
 
-#loaenyptry .gt_super {
+#fltdudrstq .gt_super {
   font-size: 65%;
 }
 
-#loaenyptry .gt_footnote_marks {
+#fltdudrstq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#loaenyptry .gt_asterisk {
+#fltdudrstq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#loaenyptry .gt_indent_1 {
+#fltdudrstq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#loaenyptry .gt_indent_2 {
+#fltdudrstq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#loaenyptry .gt_indent_3 {
+#fltdudrstq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#loaenyptry .gt_indent_4 {
+#fltdudrstq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#loaenyptry .gt_indent_5 {
+#fltdudrstq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#loaenyptry .katex-display {
+#fltdudrstq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#loaenyptry div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#fltdudrstq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1143,23 +1167,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>fuel_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="sjmekezfna" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#sjmekezfna table {
+<div id="iozwenmbgq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#iozwenmbgq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#sjmekezfna thead, #sjmekezfna tbody, #sjmekezfna tfoot, #sjmekezfna tr, #sjmekezfna td, #sjmekezfna th {
+#iozwenmbgq thead, #iozwenmbgq tbody, #iozwenmbgq tfoot, #iozwenmbgq tr, #iozwenmbgq td, #iozwenmbgq th {
   border-style: none;
 }
 
-#sjmekezfna p {
+#iozwenmbgq p {
   margin: 0;
   padding: 0;
 }
 
-#sjmekezfna .gt_table {
+#iozwenmbgq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1185,12 +1209,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_caption {
+#iozwenmbgq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#sjmekezfna .gt_title {
+#iozwenmbgq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1202,7 +1226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#sjmekezfna .gt_subtitle {
+#iozwenmbgq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1214,7 +1238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#sjmekezfna .gt_heading {
+#iozwenmbgq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1226,13 +1250,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_bottom_border {
+#iozwenmbgq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_col_headings {
+#iozwenmbgq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1247,7 +1271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_col_heading {
+#iozwenmbgq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1267,7 +1291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#sjmekezfna .gt_column_spanner_outer {
+#iozwenmbgq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1279,15 +1303,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#sjmekezfna .gt_column_spanner_outer:first-child {
+#iozwenmbgq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#sjmekezfna .gt_column_spanner_outer:last-child {
+#iozwenmbgq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#sjmekezfna .gt_column_spanner {
+#iozwenmbgq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1299,11 +1323,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#sjmekezfna .gt_spanner_row {
+#iozwenmbgq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#sjmekezfna .gt_group_heading {
+#iozwenmbgq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1329,7 +1353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#sjmekezfna .gt_empty_group_heading {
+#iozwenmbgq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1344,15 +1368,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#sjmekezfna .gt_from_md > :first-child {
+#iozwenmbgq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#sjmekezfna .gt_from_md > :last-child {
+#iozwenmbgq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#sjmekezfna .gt_row {
+#iozwenmbgq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1371,7 +1395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#sjmekezfna .gt_stub {
+#iozwenmbgq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1384,7 +1408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#sjmekezfna .gt_stub_row_group {
+#iozwenmbgq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1398,15 +1422,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#sjmekezfna .gt_row_group_first td {
+#iozwenmbgq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#sjmekezfna .gt_row_group_first th {
+#iozwenmbgq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#sjmekezfna .gt_summary_row {
+#iozwenmbgq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1416,16 +1440,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#sjmekezfna .gt_first_summary_row {
+#iozwenmbgq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_first_summary_row.thick {
+#iozwenmbgq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#sjmekezfna .gt_last_summary_row {
+#iozwenmbgq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1435,7 +1459,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_grand_summary_row {
+#iozwenmbgq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1445,7 +1469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#sjmekezfna .gt_first_grand_summary_row {
+#iozwenmbgq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1455,7 +1479,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_last_grand_summary_row_top {
+#iozwenmbgq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1465,11 +1489,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_striped {
+#iozwenmbgq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#sjmekezfna .gt_table_body {
+#iozwenmbgq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1478,7 +1502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_footnotes {
+#iozwenmbgq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1492,7 +1516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_footnote {
+#iozwenmbgq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1501,7 +1525,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#sjmekezfna .gt_sourcenotes {
+#iozwenmbgq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1515,7 +1539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#sjmekezfna .gt_sourcenote {
+#iozwenmbgq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1523,72 +1547,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#sjmekezfna .gt_left {
+#iozwenmbgq .gt_left {
   text-align: left;
 }
 
-#sjmekezfna .gt_center {
+#iozwenmbgq .gt_center {
   text-align: center;
 }
 
-#sjmekezfna .gt_right {
+#iozwenmbgq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#sjmekezfna .gt_font_normal {
+#iozwenmbgq .gt_font_normal {
   font-weight: normal;
 }
 
-#sjmekezfna .gt_font_bold {
+#iozwenmbgq .gt_font_bold {
   font-weight: bold;
 }
 
-#sjmekezfna .gt_font_italic {
+#iozwenmbgq .gt_font_italic {
   font-style: italic;
 }
 
-#sjmekezfna .gt_super {
+#iozwenmbgq .gt_super {
   font-size: 65%;
 }
 
-#sjmekezfna .gt_footnote_marks {
+#iozwenmbgq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#sjmekezfna .gt_asterisk {
+#iozwenmbgq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#sjmekezfna .gt_indent_1 {
+#iozwenmbgq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#sjmekezfna .gt_indent_2 {
+#iozwenmbgq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#sjmekezfna .gt_indent_3 {
+#iozwenmbgq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#sjmekezfna .gt_indent_4 {
+#iozwenmbgq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#sjmekezfna .gt_indent_5 {
+#iozwenmbgq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#sjmekezfna .katex-display {
+#iozwenmbgq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#sjmekezfna div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#iozwenmbgq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1839,10 +1863,744 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p><strong>Relate Total Emissions and Passenger Service</strong></p>
-<p><strong>Identify ‘Greenest’ Transit Agencies</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Task 6: Normalize Emissions to Transit Usage</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Prepare NTD_SERVICE anchor data and align the mode codes to full text names</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>service_anchor <span class="ot">&lt;-</span> NTD_SERVICE <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">NTD_ID =</span> <span class="fu">as.numeric</span>(NTD_ID),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># FIX: Recode mode here too so it matches NTD_ENERGY perfectly!</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode =</span> <span class="fu">recode_values</span>(mode, </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"HR"</span> <span class="sc">~</span> <span class="st">"Heavy Rail"</span>, </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"LR"</span> <span class="sc">~</span> <span class="st">"Light Rail"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"CR"</span> <span class="sc">~</span> <span class="st">"Commuter Rail"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"MG"</span> <span class="sc">~</span> <span class="st">"Monorail / Automated Guideway"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"SR"</span> <span class="sc">~</span> <span class="st">"Streetcar Rail"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"IP"</span> <span class="sc">~</span> <span class="st">"Inclined Plane"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"CC"</span> <span class="sc">~</span> <span class="st">"Cable Car"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"MB"</span> <span class="sc">~</span> <span class="st">"Motorbus"</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"CB"</span> <span class="sc">~</span> <span class="st">"Commuter Bus"</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"RB"</span> <span class="sc">~</span> <span class="st">"Bus Rapid Transit"</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"TB"</span> <span class="sc">~</span> <span class="st">"Trolleybus"</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"FB"</span> <span class="sc">~</span> <span class="st">"Ferryboat"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"TR"</span> <span class="sc">~</span> <span class="st">"Aerial Tramway"</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"DR"</span> <span class="sc">~</span> <span class="st">"Demand Response"</span>,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"DT"</span> <span class="sc">~</span> <span class="st">"Demand Response Taxi"</span>,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"JT"</span> <span class="sc">~</span> <span class="st">"Jitney"</span>,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"VP"</span> <span class="sc">~</span> <span class="st">"Vanpool"</span>,</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"PB"</span> <span class="sc">~</span> <span class="st">"Publico"</span>,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"OR"</span> <span class="sc">~</span> <span class="st">"Other Rail"</span>,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>                         <span class="at">default =</span> <span class="st">"Unknown"</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NTD_ID, AGENCY, state, mode) <span class="sc">|&gt;</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Prepare NTD_ENERGY data</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>energy_clean <span class="ot">&lt;-</span> NTD_ENERGY <span class="sc">|&gt;</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">NTD_ID =</span> <span class="st">`</span><span class="at">NTD ID</span><span class="st">`</span>, <span class="at">mode =</span> Mode) <span class="sc">|&gt;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">NTD_ID =</span> <span class="fu">as.numeric</span>(NTD_ID)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Prepare EIA_SEP_REPORT data </span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>eia_clean <span class="ot">&lt;-</span> EIA_SEP_REPORT <span class="sc">|&gt;</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">state_abb =</span> abbreviation, </span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">EIA CO2 Emitted (lbs/MWh)</span><span class="st">`</span> <span class="ot">=</span> CO2_MWh</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Re-join the Master Table with synchronized keys</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>MASTER_TABLE <span class="ot">&lt;-</span> service_anchor <span class="sc">|&gt;</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(energy_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"NTD_ID"</span>, <span class="st">"mode"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(eia_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"state"</span> <span class="ot">=</span> <span class="st">"state_abb"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span> <span class="ot">=</span> AGENCY,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mode =</span> mode,</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">State Location</span><span class="st">`</span> <span class="ot">=</span> state,</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">everything</span>()</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span>))</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Clean up NAs globally across the matched numeric fields</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>MASTER_TABLE_WITH_EMISSIONS <span class="ot">&lt;-</span> MASTER_TABLE <span class="sc">|&gt;</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">replace_na</span>(.x, <span class="dv">0</span>)))</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper column index finder for safety</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>safe_col <span class="ot">&lt;-</span> <span class="cf">function</span>(df, pattern) {</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>  col_idx <span class="ot">&lt;-</span> <span class="fu">grep</span>(pattern, <span class="fu">colnames</span>(df), <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(col_idx) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(col_idx) <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="fu">rowSums</span>(df[, col_idx], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="cf">else</span> df[[col_idx]]</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(df))</span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Re-calculate row-wide total emissions</span></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>MASTER_TABLE_WITH_EMISSIONS<span class="sc">$</span><span class="st">`</span><span class="at">Total CO2 Emissions (lbs)</span><span class="st">`</span> <span class="ot">&lt;-</span> </span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Diesel"</span>) <span class="sc">*</span> <span class="fl">22.45</span>) <span class="sc">+</span> </span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Gasoline"</span>) <span class="sc">*</span> <span class="fl">18.73</span>) <span class="sc">+</span> </span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Petroleum|LPG"</span>) <span class="sc">*</span> <span class="fl">12.68</span>) <span class="sc">+</span> </span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Liquefied Natural Gas|LNG"</span>) <span class="sc">*</span> <span class="fl">10.15</span>) <span class="sc">+</span> </span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Compressed|CNG"</span>) <span class="sc">*</span> <span class="fl">0.12</span>) <span class="sc">+</span> </span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">safe_col</span>(MASTER_TABLE_WITH_EMISSIONS, <span class="st">"Kilowatt|Electricity|kWh"</span>) <span class="sc">*</span> </span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>     (MASTER_TABLE_WITH_EMISSIONS<span class="sc">$</span><span class="st">`</span><span class="at">EIA CO2 Emitted (lbs/MWh)</span><span class="st">`</span> <span class="sc">/</span> <span class="dv">1000</span>))</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a><span class="do">################</span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Aggregate emissions by Agency and capture State Location</span></span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>agency_efficiency <span class="ot">&lt;-</span> MASTER_TABLE_WITH_EMISSIONS <span class="sc">|&gt;</span></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">State =</span> <span class="fu">first</span>(<span class="st">`</span><span class="at">State Location</span><span class="st">`</span>),</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">Total_Emissions_lbs =</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">Total CO2 Emissions (lbs)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Join with transit metrics from NTD_SERVICE</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>    NTD_SERVICE <span class="sc">|&gt;</span></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(AGENCY) <span class="sc">|&gt;</span></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarize</span>(</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>        <span class="at">Total_UPT =</span> <span class="fu">sum</span>(total_upt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>        <span class="at">Total_Passenger_Miles =</span> <span class="fu">sum</span>(sum_passenger_miles, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Agency Name"</span> <span class="ot">=</span> <span class="st">"AGENCY"</span>)</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter out non-operational entries and ensure emissions are tracked</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Total_UPT <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">&amp;</span> Total_Passenger_Miles <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">&amp;</span> Total_Emissions_lbs <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Compute efficiency metrics and apply size brackets</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>    <span class="at">Emissions_Per_UPT  =</span> Total_Emissions_lbs <span class="sc">/</span> Total_UPT,</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">Emissions_Per_Mile =</span> Total_Emissions_lbs <span class="sc">/</span> Total_Passenger_Miles,</span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">Agency_Size =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>      Total_UPT <span class="sc">&lt;</span> <span class="fl">1e6</span>                     <span class="sc">~</span> <span class="st">"Small (&lt; 1M annual trips)"</span>,</span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>      Total_UPT <span class="sc">&gt;=</span> <span class="fl">1e6</span> <span class="sc">&amp;</span> Total_UPT <span class="sc">&lt;</span> <span class="fl">10e6</span> <span class="sc">~</span> <span class="st">"Medium (1M - 10M annual trips)"</span>,</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>      Total_UPT <span class="sc">&gt;=</span> <span class="fl">10e6</span>                   <span class="sc">~</span> <span class="st">"Large (&gt; 10M annual trips)"</span></span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Isolate the most efficient winner per category tier</span></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>efficiency_awards <span class="ot">&lt;-</span> agency_efficiency <span class="sc">|&gt;</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Agency_Size) <span class="sc">|&gt;</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(Emissions_Per_UPT, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Agency Size</span><span class="st">`</span> <span class="ot">=</span> Agency_Size,</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span>,</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>    State,</span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Total Annual Trips (UPT)</span><span class="st">`</span> <span class="ot">=</span> Total_UPT,</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Lbs CO2 Per Trip</span><span class="st">`</span> <span class="ot">=</span> Emissions_Per_UPT,</span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Lbs CO2 Per Passenger Mile</span><span class="st">`</span> <span class="ot">=</span> Emissions_Per_Mile</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Total Annual Trips (UPT)</span><span class="st">`</span>))</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Render the final styled award table</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>efficiency_awards <span class="sc">|&gt;</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**Transit Efficiency Awards by Agency Size**"</span>),</span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"*Most efficient networks based on lowest CO2 emissions per Unlinked Passenger Trip (UPT)*"</span>)</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">"#EFEFEF"</span>),</span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>)</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_column_labels</span>(<span class="at">columns =</span> <span class="fu">everything</span>()),</span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_title</span>(<span class="at">groups =</span> <span class="st">"title"</span>)</span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_integer</span>(<span class="at">columns =</span> <span class="st">`</span><span class="at">Total Annual Trips (UPT)</span><span class="st">`</span>, <span class="at">use_seps =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">Lbs CO2 Per Trip</span><span class="st">`</span>, <span class="st">`</span><span class="at">Lbs CO2 Per Passenger Mile</span><span class="st">`</span>), <span class="at">decimals =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="yzvouzbnqn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yzvouzbnqn table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#yzvouzbnqn thead, #yzvouzbnqn tbody, #yzvouzbnqn tfoot, #yzvouzbnqn tr, #yzvouzbnqn td, #yzvouzbnqn th {
+  border-style: none;
+}
+
+#yzvouzbnqn p {
+  margin: 0;
+  padding: 0;
+}
+
+#yzvouzbnqn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#yzvouzbnqn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#yzvouzbnqn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#yzvouzbnqn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#yzvouzbnqn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#yzvouzbnqn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#yzvouzbnqn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#yzvouzbnqn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#yzvouzbnqn .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#yzvouzbnqn .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#yzvouzbnqn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#yzvouzbnqn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#yzvouzbnqn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#yzvouzbnqn .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#yzvouzbnqn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yzvouzbnqn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#yzvouzbnqn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#yzvouzbnqn .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#yzvouzbnqn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yzvouzbnqn .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#yzvouzbnqn .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yzvouzbnqn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#yzvouzbnqn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yzvouzbnqn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yzvouzbnqn .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yzvouzbnqn .gt_left {
+  text-align: left;
+}
+
+#yzvouzbnqn .gt_center {
+  text-align: center;
+}
+
+#yzvouzbnqn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#yzvouzbnqn .gt_font_normal {
+  font-weight: normal;
+}
+
+#yzvouzbnqn .gt_font_bold {
+  font-weight: bold;
+}
+
+#yzvouzbnqn .gt_font_italic {
+  font-style: italic;
+}
+
+#yzvouzbnqn .gt_super {
+  font-size: 65%;
+}
+
+#yzvouzbnqn .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#yzvouzbnqn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#yzvouzbnqn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#yzvouzbnqn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#yzvouzbnqn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#yzvouzbnqn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#yzvouzbnqn .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#yzvouzbnqn .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yzvouzbnqn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="6" class="gt_heading gt_title gt_font_normal" style="background-color: #EFEFEF; font-weight: bold"><strong>Transit Efficiency Awards by Agency Size</strong></td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><em>Most efficient networks based on lowest CO2 emissions per Unlinked Passenger Trip (UPT)</em></td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Agency-Size" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">Agency Size</th>
+<th id="Agency-Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">Agency Name</th>
+<th id="State" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">State</th>
+<th id="Total-Annual-Trips-(UPT)" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">Total Annual Trips (UPT)</th>
+<th id="Lbs-CO2-Per-Trip" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">Lbs CO2 Per Trip</th>
+<th id="Lbs-CO2-Per-Passenger-Mile" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #EFEFEF; font-weight: bold" scope="col">Lbs CO2 Per Passenger Mile</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Agency-Size">Large (&gt; 10M annual trips)</td>
+<td class="gt_row gt_left" headers="Agency-Name">City of Santa Monica, dba: Big Blue Bus</td>
+<td class="gt_row gt_left" headers="State">CA</td>
+<td class="gt_row gt_right" headers="Total-Annual-Trips-(UPT)">10,123,253</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Trip">0.0523</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Passenger-Mile">0.0159</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Agency-Size">Medium (1M - 10M annual trips)</td>
+<td class="gt_row gt_left" headers="Agency-Name">City of Culver City, dba: Culver CityBus</td>
+<td class="gt_row gt_left" headers="State">CA</td>
+<td class="gt_row gt_right" headers="Total-Annual-Trips-(UPT)">3,311,864</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Trip">0.0340</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Passenger-Mile">0.0101</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Agency-Size">Small (&lt; 1M annual trips)</td>
+<td class="gt_row gt_left" headers="Agency-Name">City of Redondo Beach, dba: Beach Cities Transit</td>
+<td class="gt_row gt_left" headers="State">CA</td>
+<td class="gt_row gt_right" headers="Total-Annual-Trips-(UPT)">265,919</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Trip">0.0618</td>
+<td class="gt_row gt_right" headers="Lbs-CO2-Per-Passenger-Mile">0.0152</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>‘Greenest’ Transit Agencies</strong></p>
+<p>As we can see here, California sweeps gold in all three categories! From largest to smallest by annual trips: Santa Monica, Culver City, and Redondo Beach have the greenest transit systems in the nation. Cowabunga dudes!</p>
+<p><strong>‘Brownest’ Transit Agencies</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Isolate the absolute highest efficiency winner (1 per size tier)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>green_winners <span class="ot">&lt;-</span> agency_efficiency <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Agency_Size) <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(Emissions_Per_UPT, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Award_Type =</span> <span class="st">"Green Award (Most Efficient)"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Isolate the single worst absolute emitter (CHANGED: 1 per size tier instead of 3)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>brown_winners <span class="ot">&lt;-</span> agency_efficiency <span class="sc">|&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Agency_Size) <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(Emissions_Per_UPT, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Award_Type =</span> <span class="st">"Brown Award (Highest Emissions)"</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Combine the 1-vs-1 matchups</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>all_winners_1v1 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(green_winners, brown_winners) <span class="sc">|&gt;</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">Graph_Label =</span> <span class="fu">paste0</span>(<span class="st">`</span><span class="at">Agency Name</span><span class="st">`</span>, <span class="st">" ("</span>, State, <span class="st">")"</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Plot a highly legible Dot Plot with a Logarithmic Axis</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_winners_1v1, <span class="fu">aes</span>(<span class="at">x =</span> Emissions_Per_UPT, <span class="at">y =</span> Agency_Size, <span class="at">color =</span> Award_Type)) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw a subtle background connector line between the two dots for each size group</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> Agency_Size), <span class="at">color =</span> <span class="st">"grey70"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Place large, crisp comparative dots</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add exact numeric text labels floating right above each dot (your original code)</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.4f"</span>, Emissions_Per_UPT)), </span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">1.2</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="fl">3.2</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># FIX / ADDED: Places the Brown Agency Name and State off to the right of the brown dots</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">filter</span>(all_winners_1v1, Award_Type <span class="sc">==</span> <span class="st">"Brown Award (Highest Emissions)"</span>),</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label =</span> Graph_Label),</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">vjust =</span> <span class="fl">0.4</span>, <span class="at">fontface =</span> <span class="st">"italic"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#8B4513"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Logarithmic scale allows both huge and tiny numbers to share the same axis beautifully</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_log</span>(), <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.4</span>))) <span class="sc">+</span> <span class="co"># Expanded right margin for text padding</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Map your exact custom green and brown color choices</span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Green Award (Most Efficient)"</span> <span class="ot">=</span> <span class="st">"#2E8B57"</span>, </span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Brown Award (Highest Emissions)"</span> <span class="ot">=</span> <span class="st">"#8B4513"</span>)) <span class="sc">+</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"The Transit Efficiency Chasm: Green vs. Brown Winners"</span>,</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparing the 1-vs-1 extremes on a Logarithmic Scale (lbs CO2 per trip)"</span>,</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Lbs CO2 Per Passenger Trip (Logarithmic)"</span>,</span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">""</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">style =</span> <span class="st">"italic"</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>() <span class="co"># Clean up logarithmic grid clutter</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mp02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On the other end of the spectrum we have states like Alaska, Washington, and (of course) New Jersey doing everything they can to hasten humanity’s demise. Like the great humanitarian Thanos once said: “Perfectly balanced, as all things should be.”</p>
 </section>
-<section id="deliverable" class="level2">
-<h2 class="anchored" data-anchor-id="deliverable">Deliverable</h2>
+<section id="transit-award-press-release" class="level2">
+<h2 class="anchored" data-anchor-id="transit-award-press-release">Transit Award Press Release</h2>
+<p>GTA used annual Unlinked Passenger Trips as a basis for how much CO2 agencies are emitting per trip and per passenger mile. By categorizing agencies according to ridership, GTA was able to find the three best and three worst performers in the nation. Coming in at the lowest CO2 Emissions per passenger trip and representing the medium size category is CityBus out of Culver City, CA (0.0340 lbs CO2 per passenger mile). Next, we have the large agency Big Blue Bus from Santa Monica, CA (0.053 lbs CO2 per passenger mile). To finish out the Green Awards, we have the small agency of Beach Cities Transit, out of Redondo Beach, CA (0.0618 lbs CO2 per passenger mile). Continuing our ascent through the smog, we have our third place Brown Award recipient, Washington State Ferries pumping a whopping 17.8405 lbs of CO2 into the atmosphere per passenger mile. Next highest is Seastreak from New Jersey, leaving 43.7696 streaks of brown in the water for every passenger they carry one mile. Finally, the dirtiest dog on the block: the Alaska Railroad Corporation with a massive <strong><em>96.7474 lbs of CO2 per passenger mile!</em></strong> That’s nearly 3,000 times as much as</p>
 <div class="callout callout-style-default callout-note callout-titled" title="AI Usage Statement">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1860,7 +2618,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <hr>
-<p>This work ©2025 by {Philip Lopez Jr} was initially prepared as a Mini-Project for STA 9750 at Baruch College. More details about this course can be found at <a href="https://michael-weylandt.com/STA9750">the course site</a> and instructions for this assignment can be found at <a href="https://michael-weylandt.com/STA9750/mini/mini02.html">MP #02</a></p>
+<p>This work ©2025 by Philip Lopez Jr was initially prepared as a Mini-Project for STA 9750 at Baruch College. More details about this course can be found at <a href="https://michael-weylandt.com/STA9750">the course site</a> and instructions for this assignment can be found at <a href="https://michael-weylandt.com/STA9750/mini/mini02.html">MP #02</a></p>
 
 
 </section>
