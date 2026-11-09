@@ -133,6 +133,7 @@ EIA_SEP_REPORT |>
 
 
 ```
+
 ```{r}
 #| output: false
 #| message: false
@@ -198,6 +199,7 @@ NTD_ENERGY <- load_ntd_energy()
 
 
 ```
+
 ```{r}
 #| output: false
 #| message: false
@@ -301,8 +303,33 @@ NTD_ENERGY <- NTD_ENERGY |>
     "VP" ~ "Vanpool",
     "PB" ~ "Publico",
     "OR" ~ "Other Rail",
-    default = "Unknown" # Matches your instructor's template directly
+    default = "Unknown"
   ))
+
+NTD_SERVICE <- NTD_SERVICE |>
+  mutate(Mode = recode_values(mode, 
+    "HR" ~ "Heavy Rail", 
+    "LR" ~ "Light Rail",
+    "CR" ~ "Commuter Rail",
+    "MG" ~ "Monorail / Automated Guideway",
+    "SR" ~ "Streetcar Rail",
+    "IP" ~ "Inclined Plane",
+    "CC" ~ "Cable Car",
+    "MB" ~ "Motorbus",
+    "CB" ~ "Commuter Bus",
+    "RB" ~ "Bus Rapid Transit",
+    "TB" ~ "Trolleybus",
+    "FB" ~ "Ferryboat",
+    "TR" ~ "Aerial Tramway",
+    "DR" ~ "Demand Response",
+    "DT" ~ "Demand Response Taxi",
+    "JT" ~ "Jitney",
+    "VP" ~ "Vanpool",
+    "PB" ~ "Publico",
+    "OR" ~ "Other Rail",
+    default = "Unknown"
+  ))
+
 
 
 ```
@@ -677,19 +704,242 @@ MASTER_TABLE_WITH_EMISSIONS <- MASTER_TABLE |>
 ```
 **Relate Total Emissions and Passenger Service**
 ```{r}
+#| message: false
+#| warning: false
+
+#Task 6: Normalize Emissions to Transit Usage
+library(tidyverse)
+
+# 1. Prepare NTD_SERVICE anchor data and align the mode codes to full text names
+service_anchor <- NTD_SERVICE |>
+  mutate(
+    NTD_ID = as.numeric(NTD_ID),
+    # FIX: Recode mode here too so it matches NTD_ENERGY perfectly!
+    mode = recode_values(mode, 
+                         "HR" ~ "Heavy Rail", 
+                         "LR" ~ "Light Rail",
+                         "CR" ~ "Commuter Rail",
+                         "MG" ~ "Monorail / Automated Guideway",
+                         "SR" ~ "Streetcar Rail",
+                         "IP" ~ "Inclined Plane",
+                         "CC" ~ "Cable Car",
+                         "MB" ~ "Motorbus",
+                         "CB" ~ "Commuter Bus",
+                         "RB" ~ "Bus Rapid Transit",
+                         "TB" ~ "Trolleybus",
+                         "FB" ~ "Ferryboat",
+                         "TR" ~ "Aerial Tramway",
+                         "DR" ~ "Demand Response",
+                         "DT" ~ "Demand Response Taxi",
+                         "JT" ~ "Jitney",
+                         "VP" ~ "Vanpool",
+                         "PB" ~ "Publico",
+                         "OR" ~ "Other Rail",
+                         default = "Unknown"
+    )
+  ) |>
+  select(NTD_ID, AGENCY, state, mode) |>
+  distinct()
+
+# 2. Prepare NTD_ENERGY data
+energy_clean <- NTD_ENERGY |>
+  rename(NTD_ID = `NTD ID`, mode = Mode) |>
+  mutate(NTD_ID = as.numeric(NTD_ID)) |> 
+  select(-`Agency Name`)
+
+# 3. Prepare EIA_SEP_REPORT data 
+eia_clean <- EIA_SEP_REPORT |>
+  select(
+    state_abb = abbreviation, 
+    `EIA CO2 Emitted (lbs/MWh)` = CO2_MWh
+  )
+
+# 4. Re-join the Master Table with synchronized keys
+MASTER_TABLE <- service_anchor |>
+  left_join(energy_clean, by = c("NTD_ID", "mode")) |>
+  left_join(eia_clean, by = c("state" = "state_abb")) |>
+  select(
+    `Agency Name` = AGENCY,
+    Mode = mode,
+    `State Location` = state,
+    everything()
+  ) |>
+  filter(!is.na(`Agency Name`))
+
+# 5. Clean up NAs globally across the matched numeric fields
+MASTER_TABLE_WITH_EMISSIONS <- MASTER_TABLE |>
+  mutate(across(where(is.numeric), ~replace_na(.x, 0)))
+
+# Helper column index finder for safety
+safe_col <- function(df, pattern) {
+  col_idx <- grep(pattern, colnames(df), ignore.case = TRUE)
+  if (length(col_idx) > 0) {
+    if (length(col_idx) > 1) rowSums(df[, col_idx], na.rm = TRUE) else df[[col_idx]]
+  } else {
+    rep(0, nrow(df))
+  }
+}
+
+# 6. Re-calculate row-wide total emissions
+MASTER_TABLE_WITH_EMISSIONS$`Total CO2 Emissions (lbs)` <- 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Diesel") * 22.45) + 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Gasoline") * 18.73) + 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Petroleum|LPG") * 12.68) + 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Liquefied Natural Gas|LNG") * 10.15) + 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Compressed|CNG") * 0.12) + 
+  (safe_col(MASTER_TABLE_WITH_EMISSIONS, "Kilowatt|Electricity|kWh") * 
+     (MASTER_TABLE_WITH_EMISSIONS$`EIA CO2 Emitted (lbs/MWh)` / 1000))
+################
+library(gt)
+
+# 1. Aggregate emissions by Agency and capture State Location
+agency_efficiency <- MASTER_TABLE_WITH_EMISSIONS |>
+  group_by(`Agency Name`) |>
+  summarize(
+    State = first(`State Location`),
+    Total_Emissions_lbs = sum(`Total CO2 Emissions (lbs)`, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  # 2. Join with transit metrics from NTD_SERVICE
+  inner_join(
+    NTD_SERVICE |>
+      group_by(AGENCY) |>
+      summarize(
+        Total_UPT = sum(total_upt, na.rm = TRUE),
+        Total_Passenger_Miles = sum(sum_passenger_miles, na.rm = TRUE),
+        .groups = "drop"
+      ),
+    by = c("Agency Name" = "AGENCY")
+  ) |>
+  # Filter out non-operational entries and ensure emissions are tracked
+  filter(Total_UPT > 1000 & Total_Passenger_Miles > 1000 & Total_Emissions_lbs > 0) |>
+  
+  # 3. Compute efficiency metrics and apply size brackets
+  mutate(
+    Emissions_Per_UPT  = Total_Emissions_lbs / Total_UPT,
+    Emissions_Per_Mile = Total_Emissions_lbs / Total_Passenger_Miles,
+    
+    Agency_Size = case_when(
+      Total_UPT < 1e6                     ~ "Small (< 1M annual trips)",
+      Total_UPT >= 1e6 & Total_UPT < 10e6 ~ "Medium (1M - 10M annual trips)",
+      Total_UPT >= 10e6                   ~ "Large (> 10M annual trips)"
+    )
+  )
+
+# 4. Isolate the most efficient winner per category tier
+efficiency_awards <- agency_efficiency |>
+  group_by(Agency_Size) |>
+  slice_min(Emissions_Per_UPT, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  select(
+    `Agency Size` = Agency_Size,
+    `Agency Name`,
+    State,
+    `Total Annual Trips (UPT)` = Total_UPT,
+    `Lbs CO2 Per Trip` = Emissions_Per_UPT,
+    `Lbs CO2 Per Passenger Mile` = Emissions_Per_Mile
+  ) |>
+  arrange(desc(`Total Annual Trips (UPT)`))
+
+# 5. Render the final styled award table
+efficiency_awards |>
+  gt() |>
+  tab_header(
+    title = md("**Transit Efficiency Awards by Agency Size**"),
+    subtitle = md("*Most efficient networks based on lowest CO2 emissions per Unlinked Passenger Trip (UPT)*")
+  ) |>
+  tab_style(
+    style = list(
+      cell_fill(color = "#EFEFEF"),
+      cell_text(weight = "bold")
+    ),
+    locations = list(
+      cells_column_labels(columns = everything()),
+      cells_title(groups = "title")
+    )
+  ) |>
+  fmt_integer(columns = `Total Annual Trips (UPT)`, use_seps = TRUE) |>
+  fmt_number(columns = c(`Lbs CO2 Per Trip`, `Lbs CO2 Per Passenger Mile`), decimals = 4)
+
 
 ```
 **Identify ‘Greenest’ Transit Agencies**
+As we can see here, California sweeps gold in all three categories! From largest to smallest by annual trips: Santa Monica, Culver City, and Redondo Beach have the greenest transit systems in the nation. Cowabunga dudes!
+
+**Identify 'Brownest' Transit Agencies**
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(scales)
+
+# 1. Isolate the absolute highest efficiency winner (1 per size tier)
+green_winners <- agency_efficiency |>
+  group_by(Agency_Size) |>
+  slice_min(Emissions_Per_UPT, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  mutate(Award_Type = "Green Award (Most Efficient)")
+
+# 2. Isolate the single worst absolute emitter (CHANGED: 1 per size tier instead of 3)
+brown_winners <- agency_efficiency |>
+  group_by(Agency_Size) |>
+  slice_max(Emissions_Per_UPT, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  mutate(Award_Type = "Brown Award (Highest Emissions)")
+
+# 3. Combine the 1-vs-1 matchups
+all_winners_1v1 <- bind_rows(green_winners, brown_winners) |>
+  mutate(
+    Graph_Label = paste0(`Agency Name`, " (", State, ")")
+  )
+
+# 4. Plot a highly legible Dot Plot with a Logarithmic Axis
+ggplot(all_winners_1v1, aes(x = Emissions_Per_UPT, y = Agency_Size, color = Award_Type)) +
+  # Draw a subtle background connector line between the two dots for each size group
+  geom_line(aes(group = Agency_Size), color = "grey70", linewidth = 1) +
+  
+  # Place large, crisp comparative dots
+  geom_point(size = 5, alpha = 0.9) +
+  
+  # Add exact numeric text labels floating right above each dot (your original code)
+  geom_text(aes(label = sprintf("%.4f", Emissions_Per_UPT)), 
+            vjust = -1.2, fontface = "bold", size = 3.2, show.legend = FALSE, color = "black") +
+  
+  # FIX / ADDED: Places the Brown Agency Name and State off to the right of the brown dots
+  geom_text(data = filter(all_winners_1v1, Award_Type == "Brown Award (Highest Emissions)"),
+            aes(label = Graph_Label),
+            hjust = -0.1, vjust = 0.4, fontface = "italic", size = 3, color = "#8B4513", show.legend = FALSE) +
+  
+  # Logarithmic scale allows both huge and tiny numbers to share the same axis beautifully
+  scale_x_log10(labels = scales::label_log(), expand = expansion(mult = c(0, 0.4))) + # Expanded right margin for text padding
+  
+  # Map your exact custom green and brown color choices
+  scale_color_manual(values = c("Green Award (Most Efficient)" = "#2E8B57", 
+                                "Brown Award (Highest Emissions)" = "#8B4513")) +
+  labs(
+    title = "The Transit Efficiency Chasm: Green vs. Brown Winners",
+    subtitle = "Comparing the 1-vs-1 extremes on a Logarithmic Scale (lbs CO2 per trip)",
+    x = "Lbs CO2 Per Passenger Trip (Logarithmic)",
+    y = "Agency Size Category",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 13),
+    plot.subtitle = element_text(style = "italic", size = 10),
+    legend.position = "top",
+    legend.title = element_text(face = "bold"),
+    axis.text = element_text(size = 10, face = "bold"),
+    panel.grid.minor = element_blank() # Clean up logarithmic grid clutter
+  )
+
+
+```
+## Transit Award Press Release
 ```{r}
 
 ```
-## Deliverable
-```{r}
-
-```
-
-
- 
 
 
 ::: {.callout-note title="AI Usage Statement" collapse="true"}
