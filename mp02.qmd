@@ -604,6 +604,75 @@ ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state_full, -
 ## Data Analysis
 **Calculate Total Emissions**
 ```{r}
+#| message: false
+#| warning: false
+
+#Task 5: Calculate Emissions
+#MASTER_TABLE set up
+library(tidyverse)
+
+# 1. Prepare NTD_SERVICE anchor data (Agency + Mode Pair + State)
+service_anchor <- NTD_SERVICE |>
+  select(NTD_ID, AGENCY, state, mode) |>
+  distinct()
+
+# 2. Prepare NTD_ENERGY data, fix the ID type mismatch, and DROP the duplicate agency column
+energy_clean <- NTD_ENERGY |>
+  rename(NTD_ID = `NTD ID`, mode = Mode) |>
+  # Convert ID from double to character to match NTD_SERVICE string type
+  mutate(NTD_ID = as.character(NTD_ID)) |> 
+  # FIX: Drop the extra Agency Name column so it doesn't conflict during the join
+  select(-`Agency Name`)
+
+# 3. Prepare EIA_SEP_REPORT data 
+eia_clean <- EIA_SEP_REPORT |>
+  select(
+    state_abb = abbreviation, 
+    `EIA CO2 Emitted (lbs/MWh)` = CO2_MWh
+  )
+
+# 4. Execute the multi-stage Master Table join pipeline
+MASTER_TABLE <- service_anchor |>
+  # Step A: Connect fuel metrics using the paired matching keys
+  left_join(energy_clean, by = c("NTD_ID", "mode")) |>
+  
+  # Step B: Connect EIA CO2 emissions by matching the transit state to EIA state
+  left_join(eia_clean, by = c("state" = "state_abb")) |>
+  
+  # Step C: Refine layout structure
+  select(
+    `Agency Name` = AGENCY,
+    Mode = mode,
+    `State Location` = state,
+    everything()
+  ) |>
+  # Keep only pairs that have valid recording inputs
+  filter(!is.na(`Agency Name`))
+
+#Add total emissions
+library(tidyverse)
+
+# Helper function to safely fetch a column by string pattern without crashing if missing
+get_fuel_val <- function(df, pattern) {
+  cols <- df |> select(matches(pattern))
+  if (ncol(cols) > 0) rowSums(cols, na.rm = TRUE) else 0
+}
+
+# Execute master table emissions calculations using pattern matching
+MASTER_TABLE_WITH_EMISSIONS <- MASTER_TABLE |>
+  # 1. First replace all NA values globally across numeric fields with 0
+  mutate(across(where(is.numeric), ~replace_na(.x, 0))) |>
+  
+  # 2. Add total emissions using safe pattern searches
+  mutate(
+    `Total CO2 Emissions (lbs)` = 
+      (get_fuel_val(pick(everything()), "Diesel") * 22.45) + 
+      (get_fuel_val(pick(everything()), "Gasoline") * 18.73) + 
+      (get_fuel_val(pick(everything()), "Petroleum|LPG") * 12.68) + 
+      (get_fuel_val(pick(everything()), "Liquefied Natural Gas|LNG") * 10.15) + 
+      (get_fuel_val(pick(everything()), "Compressed|CNG") * 0.12) + 
+      (get_fuel_val(pick(everything()), "Kilowatt|Electricity|kWh") * (`EIA CO2 Emitted (lbs/MWh)` / 1000))
+  )
 
 ```
 **Relate Total Emissions and Passenger Service**
