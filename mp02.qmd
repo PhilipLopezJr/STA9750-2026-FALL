@@ -1,7 +1,7 @@
 
 ---
 title: "ALL GREEN AHEAD FOR THESE GOLD WINNERS! EXECUTIVE ANNOUNCES MOST ENERGY-CONSCIOUS PUBLIC TRANSIT AGENCIES"
-subtitle: "***Green Transit Authority (GTA) Executive Director Philip Lopez Jr awards [insert winners] for their outstanding commitment to sustainability***"
+subtitle: "***Green Transit Authority (GTA) Executive Director awards [insert winners] for their outstanding commitment to sustainability***"
 date: "2026-11-08"
 author: "Philip Lopez Jr"
 editor:
@@ -505,7 +505,11 @@ library(scales)
 
 # 1. Filter for the top 5 services by UPT
 top_5_upt <- NTD_SERVICE |> 
-  mutate(Service_Name = paste0(AGENCY, " - ", mode)) |> 
+  # FIX: Correct Brooklyn to New York City if it matches the main MTA agency entries
+  mutate(
+    city = if_else(city == "Brooklyn" & str_detect(AGENCY, "Transit"), "New York City", city),
+    Service_Name = paste0(city, " - ", mode)
+  ) |> 
   slice_max(total_upt, n = 5, with_ties = FALSE)
 
 # 2. Plot the graph in Millions
@@ -560,17 +564,25 @@ The transit service in NYC with the longest average trip length is the **`r long
 #| warning: false
 
 #Question 4
-library(tidyverse)
+# 1. Create a quick lookup data frame for state names
+state_lookup <- tibble(
+  state = state.abb,
+  state_full = state.name
+)
 
-# 1. Aggregate and find the 5 states with the lowest transit miles
+# 2. Aggregate and find the 5 states with the lowest transit miles
 fewest_miles_states <- NTD_SERVICE |> 
   group_by(state) |> 
   summarize(total_miles = sum(sum_passenger_miles, na.rm = TRUE)) |> 
   filter(!is.na(state) & total_miles > 0) |> 
+  # Match abbreviations with full state names
+  left_join(state_lookup, by = "state") |> 
+  # Handle any non-standard region codes (like DC or PR) safely if they appear
+  mutate(state_full = coalesce(state_full, state)) |> 
   slice_min(total_miles, n = 5)
 
-# 2. Build the chart in Millions (or Thousands depending on your dataset values)
-ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state, -total_miles))) +
+# 3. Build the chart in Millions using the full state names
+ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state_full, -total_miles))) +
   geom_col(fill = "darkblue") +
   geom_text(aes(label = sprintf("%.2fM", total_miles / 1e6)), 
             hjust = -0.1, fontface = "bold", size = 3.5) +
@@ -582,7 +594,10 @@ ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state, -total
     y = "State"
   ) +
   theme_minimal() +
-  theme(plot.title = element_text(face = "bold", size = 12))
+  theme(
+    plot.title = element_text(face = "bold", size = 12)
+  )
+
 
 
 ```
