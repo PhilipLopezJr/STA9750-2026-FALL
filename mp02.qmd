@@ -10,6 +10,8 @@ format:
   html:
     theme: minty
     code-fold: true
+    output-dir: "docs"
+    output-file: "mp02.html"
 ---
 **FOR IMMEDIATE RELEASE**
 
