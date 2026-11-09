@@ -601,8 +601,23 @@ ggplot(fewest_miles_states, aes(x = total_miles / 1e6, y = reorder(state_full, -
 
 
 ```
+## Data Analysis
+**Calculate Total Emissions**
+```{r}
 
+```
+**Relate Total Emissions and Passenger Service**
+```{r}
 
+```
+**Identify ‘Greenest’ Transit Agencies**
+```{r}
+
+```
+## Deliverable
+```{r}
+
+```
 
 
  
